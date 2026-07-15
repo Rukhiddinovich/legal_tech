@@ -1,7 +1,9 @@
 import 'package:dartz/dartz.dart' hide State;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/adolat_loader.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/error/failure.dart';
@@ -32,7 +34,7 @@ class _WalletPageState extends State<WalletPage> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(
-              child: CircularProgressIndicator(color: AppColors.navy),
+              child: AdolatLoader(),
             );
           }
           final wallet = snapshot.data!.getOrElse(
@@ -133,7 +135,7 @@ class _BalanceCard extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.lock_clock_outlined,
+                const Icon(CupertinoIcons.lock,
                     size: 14, color: AppColors.gold),
                 const SizedBox(width: 7),
                 GlobalText(
@@ -150,7 +152,7 @@ class _BalanceCard extends StatelessWidget {
             children: [
               Expanded(
                 child: _ActionButton(
-                  icon: Icons.add_rounded,
+                  icon: CupertinoIcons.add,
                   label: 'To\'ldirish',
                   filled: true,
                 ),
@@ -158,7 +160,7 @@ class _BalanceCard extends StatelessWidget {
               const SizedBox(width: 11),
               Expanded(
                 child: _ActionButton(
-                  icon: Icons.arrow_outward_rounded,
+                  icon: CupertinoIcons.arrow_up_right,
                   label: 'Yechish',
                   filled: false,
                 ),
@@ -235,7 +237,7 @@ class _TransactionTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(11),
             ),
             child: Icon(
-              credit ? Icons.south_west_rounded : Icons.north_east_rounded,
+              credit ? CupertinoIcons.arrow_down_left : CupertinoIcons.arrow_up_right,
               size: 18,
               color: credit ? AppColors.online : AppColors.navy,
             ),

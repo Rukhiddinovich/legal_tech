@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/widgets/adolat_loader.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/view_status.dart';
@@ -83,7 +85,7 @@ class _ConsultationViewState extends State<_ConsultationView> {
                   builder: (context, state) {
                     if (state.status.isLoading || state.status.isInitial) {
                       return const Center(
-                        child: CircularProgressIndicator(color: AppColors.navy),
+                        child: AdolatLoader(),
                       );
                     }
                     return ListView(
@@ -143,8 +145,8 @@ class _ChatHeader extends StatelessWidget {
                 child: const Padding(
                   padding: EdgeInsets.only(right: 12),
                   child: Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    size: 16,
+                    CupertinoIcons.back,
+                    size: 18,
                     color: AppColors.white,
                   ),
                 ),
@@ -181,13 +183,13 @@ class _ChatHeader extends StatelessWidget {
                 ),
               ),
               _HeaderCircle(
-                icon: Icons.call_outlined,
+                icon: CupertinoIcons.phone,
                 background: AppColors.white.withValues(alpha: 0.12),
                 iconColor: AppColors.white,
               ),
               const SizedBox(width: 8),
               _HeaderCircle(
-                icon: Icons.videocam_outlined,
+                icon: CupertinoIcons.video_camera,
                 background: AppColors.gold.withValues(alpha: 0.9),
                 iconColor: AppColors.navyText,
               ),
@@ -248,7 +250,7 @@ class _TimerBar extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(Icons.access_time_rounded, size: 15, color: accent),
+              Icon(CupertinoIcons.clock, size: 15, color: accent),
               const SizedBox(width: 8),
               GlobalText(
                 text: finished
@@ -337,7 +339,7 @@ class _InputBar extends StatelessWidget {
               color: AppColors.chipBg,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.add, size: 18, color: AppColors.textMuted),
+            child: const Icon(CupertinoIcons.plus, size: 18, color: AppColors.textMuted),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -375,7 +377,7 @@ class _InputBar extends StatelessWidget {
                 color: AppColors.navy,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.send_rounded, size: 17, color: AppColors.gold),
+              child: const Icon(CupertinoIcons.paperplane_fill, size: 17, color: AppColors.gold),
             ),
           ),
         ],

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
@@ -77,7 +78,7 @@ class _StepDot extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(color: circleColor, shape: BoxShape.circle),
           child: done
-              ? const Icon(Icons.check, size: 12, color: AppColors.white)
+              ? const Icon(CupertinoIcons.checkmark, size: 12, color: AppColors.white)
               : GlobalText(
                   text: '${index + 1}',
                   fontSize: 11,

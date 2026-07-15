@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -178,8 +179,8 @@ class _Header extends StatelessWidget {
                 width: 38,
                 height: 38,
                 child: Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  size: 15,
+                  CupertinoIcons.back,
+                  size: 18,
                   color: AppColors.navyText,
                 ),
               ),
@@ -229,8 +230,9 @@ class _TypeSelector extends StatelessWidget {
                 ),
               ),
               const Icon(
-                Icons.keyboard_arrow_down_rounded,
+                CupertinoIcons.chevron_down,
                 color: AppColors.textMuted,
+                size: 16,
               ),
             ],
           ),
@@ -251,7 +253,7 @@ class _BhmBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.info_outline_rounded, size: 15, color: AppColors.goldDark),
+          const Icon(CupertinoIcons.info, size: 15, color: AppColors.goldDark),
           const SizedBox(width: 8),
           GlobalText(
             text: '1 BHM = ${Formatters.money(412000)} so\'m (2026-yil)',
@@ -391,7 +393,7 @@ class _TypePickerSheet extends StatelessWidget {
                 color: AppColors.textMuted,
               ),
               trailing: type.id == current.id
-                  ? const Icon(Icons.check_circle_rounded,
+                  ? const Icon(CupertinoIcons.check_mark_circled_solid,
                       color: AppColors.navy, size: 20)
                   : null,
             ),

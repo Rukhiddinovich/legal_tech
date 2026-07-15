@@ -1,10 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/adolat_loader.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/router/app_route_names.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/global_button.dart';
@@ -52,10 +55,9 @@ class _CheckoutView extends StatelessWidget {
     return BlocListener<PaymentBloc, PaymentState>(
       listenWhen: (prev, curr) => !prev.isPaid && curr.isPaid,
       listener: (context, state) {
-        Navigator.pushReplacementNamed(
-          context,
+        context.pushReplacement(
           AppRouteNames.consultation,
-          arguments: lawyer,
+          extra: lawyer,
         );
       },
       child: Scaffold(
@@ -142,8 +144,8 @@ class _BackCircle extends StatelessWidget {
           width: 38,
           height: 38,
           child: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            size: 15,
+            CupertinoIcons.back,
+            size: 18,
             color: AppColors.navyText,
           ),
         ),
@@ -445,7 +447,7 @@ class _EscrowBanner extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.shield_outlined, size: 20, color: AppColors.goldDark),
+          const Icon(CupertinoIcons.shield, size: 20, color: AppColors.goldDark),
           const SizedBox(width: 11),
           Expanded(
             child: Text.rich(
@@ -531,13 +533,9 @@ class _ProcessingButton extends StatelessWidget {
         color: AppColors.navy,
         borderRadius: BorderRadius.circular(AppRadius.lg),
       ),
-      child: const SizedBox(
-        width: 22,
-        height: 22,
-        child: CircularProgressIndicator(
-          strokeWidth: 2.4,
-          valueColor: AlwaysStoppedAnimation(AppColors.gold),
-        ),
+      child: const AdolatLoader(
+        size: 22,
+        color: AppColors.gold,
       ),
     );
   }

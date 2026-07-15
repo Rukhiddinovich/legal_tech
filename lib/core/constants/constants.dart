@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:legal_tech/core/constants/app_colors.dart';
+import '../widgets/adolat_loader.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -56,6 +56,8 @@ class TimeOutConstants {
   static int sendTimeout = 60;
 }
 
+
+
 class MyCircularProgressIndicator extends StatelessWidget {
   const MyCircularProgressIndicator({
     super.key,
@@ -69,9 +71,9 @@ class MyCircularProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: CupertinoActivityIndicator(
-        radius: radius,
-        color: color ?? AppColors.navy,
+      child: AdolatLoader(
+        size: radius * 2.2,
+        color: color,
       ),
     );
   }

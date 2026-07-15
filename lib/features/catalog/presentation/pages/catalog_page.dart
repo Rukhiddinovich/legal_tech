@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,6 +7,8 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/constants/view_status.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/router/app_route_names.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/widgets/adolat_loader.dart';
 import '../../../../core/widgets/global_text.dart';
 import '../../../../core/widgets/global_text_field.dart';
 import '../../../../core/widgets/gradient_avatar.dart';
@@ -38,11 +41,11 @@ class _CatalogView extends StatelessWidget {
   final String userName;
 
   void _openProfile(BuildContext context, Lawyer lawyer) {
-    Navigator.pushNamed(context, AppRouteNames.lawyerProfile, arguments: lawyer);
+    context.push(AppRouteNames.lawyerProfile, extra: lawyer);
   }
 
   void _openCheckout(BuildContext context, Lawyer lawyer) {
-    Navigator.pushNamed(context, AppRouteNames.checkout, arguments: lawyer);
+    context.push(AppRouteNames.checkout, extra: lawyer);
   }
 
   @override
@@ -98,7 +101,7 @@ class _CatalogView extends StatelessWidget {
       return const [
         Padding(
           padding: EdgeInsets.only(top: 40),
-          child: Center(child: CircularProgressIndicator(color: AppColors.navy)),
+          child: Center(child: AdolatLoader()),
         ),
       ];
     }
@@ -207,7 +210,7 @@ class _SearchField extends StatelessWidget {
           context.read<CatalogBloc>().add(CatalogSearchChanged(v)),
       hintText: 'Advokat yoki soha bo\'yicha qidiring',
       prefixIcon: const Icon(
-        Icons.search_rounded,
+        CupertinoIcons.search,
         size: 20,
         color: AppColors.textHint,
       ),
@@ -234,7 +237,7 @@ class _AreasGrid extends StatelessWidget {
     if (state.areas.isEmpty) {
       return const SizedBox(
         height: 100,
-        child: Center(child: CircularProgressIndicator(color: AppColors.navy)),
+        child: Center(child: AdolatLoader()),
       );
     }
     return GridView.count(
@@ -267,12 +270,11 @@ class _ToolsRow extends StatelessWidget {
         children: [
         Expanded(
           child: ToolCard(
-            icon: Icons.description_outlined,
+            icon: CupertinoIcons.doc,
             title: 'Hujjat generatori',
             subtitle: 'Shartnoma, ariza — PDF',
             dark: true,
-            onTap: () => Navigator.pushNamed(
-              context,
+            onTap: () => context.push(
               AppRouteNames.documentGenerator,
             ),
           ),
@@ -280,12 +282,12 @@ class _ToolsRow extends StatelessWidget {
         const SizedBox(width: 11),
         Expanded(
           child: ToolCard(
-            icon: Icons.calculate_outlined,
+            icon: CupertinoIcons.percent,
             title: 'Boj kalkulyatori',
             subtitle: 'Sud & notarius boji',
             dark: false,
             onTap: () =>
-                Navigator.pushNamed(context, AppRouteNames.feeCalculator),
+                context.push(AppRouteNames.feeCalculator),
           ),
         ),
       ],

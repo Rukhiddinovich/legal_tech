@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/di/injection_container.dart';
-import 'core/router/app_route_names.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/theme/presentation/bloc/theme_bloc.dart';
@@ -17,14 +16,13 @@ class AdolatApp extends StatelessWidget {
       create: (_) => sl<ThemeBloc>(),
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (context, themeMode) {
-          return MaterialApp(
+          return MaterialApp.router(
             title: 'Adolat',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.light(),
             darkTheme: AppTheme.dark(),
             themeMode: themeMode,
-            initialRoute: AppRouteNames.splash,
-            onGenerateRoute: AppRouter.onGenerateRoute,
+            routerConfig: AppRouter.router,
             scrollBehavior: const MaterialScrollBehavior().copyWith(
               physics: const BouncingScrollPhysics(),
             ),

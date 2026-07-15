@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,28 +24,28 @@ class TabShellPage extends StatelessWidget {
 
   static const _items = <NavItem>[
     NavItem(
-      icon: Icons.home_outlined,
-      activeIcon: Icons.home_rounded,
+      icon: CupertinoIcons.house,
+      activeIcon: CupertinoIcons.house_fill,
       label: 'Bosh',
     ),
     NavItem(
-      icon: Icons.description_outlined,
-      activeIcon: Icons.description_rounded,
+      icon: CupertinoIcons.doc,
+      activeIcon: CupertinoIcons.doc_fill,
       label: 'Hujjatlar',
     ),
     NavItem(
-      icon: Icons.chat_bubble_outline_rounded,
-      activeIcon: Icons.chat_bubble_rounded,
+      icon: CupertinoIcons.chat_bubble,
+      activeIcon: CupertinoIcons.chat_bubble_fill,
       label: 'Chat',
     ),
     NavItem(
-      icon: Icons.account_balance_wallet_outlined,
-      activeIcon: Icons.account_balance_wallet_rounded,
+      icon: CupertinoIcons.creditcard,
+      activeIcon: CupertinoIcons.creditcard_fill,
       label: 'Hamyon',
     ),
     NavItem(
-      icon: Icons.person_outline_rounded,
-      activeIcon: Icons.person_rounded,
+      icon: CupertinoIcons.person,
+      activeIcon: CupertinoIcons.person_fill,
       label: 'Profil',
     ),
   ];
@@ -56,6 +57,7 @@ class TabShellPage extends StatelessWidget {
       child: BlocBuilder<TabBloc, int>(
         builder: (context, index) {
           return Scaffold(
+            extendBody: true,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: IndexedStack(index: index, children: _pages),
             bottomNavigationBar: BottomNavBar(

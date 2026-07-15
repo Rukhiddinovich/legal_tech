@@ -6,6 +6,8 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/router/app_route_names.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/widgets/adolat_loader.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../../../core/widgets/global_text.dart';
 import '../../../../core/widgets/gradient_avatar.dart';
@@ -49,7 +51,7 @@ class _ConsultationListPageState extends State<ConsultationListPage> {
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return const Center(
-                      child: CircularProgressIndicator(color: AppColors.navy),
+                      child: AdolatLoader(),
                     );
                   }
                   final lawyers = snapshot.data!.getOrElse(() => const []);
@@ -93,10 +95,9 @@ class _ConversationTile extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.md),
-        onTap: () => Navigator.pushNamed(
-          context,
+        onTap: () => context.push(
           AppRouteNames.consultation,
-          arguments: lawyer,
+          extra: lawyer,
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),

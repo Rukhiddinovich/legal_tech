@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/router/app_route_names.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/global_text.dart';
 import '../../../../core/widgets/app_card.dart';
 
@@ -35,12 +37,11 @@ class DocumentsHubPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: _BigToolCard(
-                    icon: Icons.description_outlined,
+                    icon: CupertinoIcons.doc,
                     title: 'Hujjat generatori',
                     subtitle: 'Shartnoma, ariza — PDF',
                     dark: true,
-                    onTap: () => Navigator.pushNamed(
-                      context,
+                    onTap: () => context.push(
                       AppRouteNames.documentGenerator,
                     ),
                   ),
@@ -48,12 +49,11 @@ class DocumentsHubPage extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _BigToolCard(
-                    icon: Icons.calculate_outlined,
+                    icon: CupertinoIcons.percent,
                     title: 'Boj kalkulyatori',
                     subtitle: 'Sud & notarius boji',
                     dark: false,
-                    onTap: () => Navigator.pushNamed(
-                      context,
+                    onTap: () => context.push(
                       AppRouteNames.feeCalculator,
                     ),
                   ),
@@ -182,7 +182,7 @@ class _DocumentTile extends StatelessWidget {
               color: AppColors.danger.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(11),
             ),
-            child: const Icon(Icons.picture_as_pdf_rounded,
+            child: const Icon(CupertinoIcons.doc_text_fill,
                 size: 20, color: AppColors.danger),
           ),
           const SizedBox(width: 12),
@@ -205,7 +205,7 @@ class _DocumentTile extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(Icons.download_rounded, color: AppColors.navy, size: 20),
+          const Icon(CupertinoIcons.arrow_down_to_line, color: AppColors.navy, size: 20),
         ],
       ),
     );

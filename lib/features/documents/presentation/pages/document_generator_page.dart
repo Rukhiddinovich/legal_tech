@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/widgets/adolat_loader.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_spacing.dart';
@@ -52,8 +54,7 @@ class _GeneratorView extends StatelessWidget {
                   builder: (context, state) {
                     if (state.status.isLoading || state.status.isInitial) {
                       return const Center(
-                        child:
-                            CircularProgressIndicator(color: AppColors.navy),
+                        child: AdolatLoader(),
                       );
                     }
                     return switch (state.step) {
@@ -138,8 +139,8 @@ class _BackCircle extends StatelessWidget {
           width: 38,
           height: 38,
           child: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            size: 15,
+            CupertinoIcons.back,
+            size: 18,
             color: AppColors.navyText,
           ),
         ),
@@ -180,7 +181,7 @@ class _TypeStep extends StatelessWidget {
                       borderRadius: BorderRadius.circular(11),
                     ),
                     child: const Icon(
-                      Icons.description_outlined,
+                      CupertinoIcons.doc,
                       color: AppColors.goldDark,
                       size: 20,
                     ),
@@ -206,8 +207,9 @@ class _TypeStep extends StatelessWidget {
                     ),
                   ),
                   const Icon(
-                    Icons.chevron_right_rounded,
+                    CupertinoIcons.chevron_right,
                     color: AppColors.textHint,
+                    size: 16,
                   ),
                 ],
               ),
@@ -253,7 +255,7 @@ class _DataStep extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(
-                  Icons.description_outlined,
+                  CupertinoIcons.doc,
                   color: AppColors.gold,
                   size: 18,
                 ),
@@ -306,7 +308,7 @@ class _DataStep extends StatelessWidget {
         const SizedBox(height: 14),
         Row(
           children: [
-            const Icon(Icons.lock_outline_rounded, size: 14, color: AppColors.textMuted),
+            const Icon(CupertinoIcons.lock, size: 14, color: AppColors.textMuted),
             const SizedBox(width: 8),
             Expanded(
               child: GlobalText(
@@ -495,7 +497,7 @@ class _DoneStep extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: const Icon(
-              Icons.check_circle_rounded,
+              CupertinoIcons.check_mark_circled_solid,
               color: AppColors.online,
               size: 52,
             ),
@@ -532,7 +534,7 @@ class _DoneStep extends StatelessWidget {
                   borderRadius: BorderRadius.circular(11),
                 ),
                 child: const Icon(
-                  Icons.picture_as_pdf_rounded,
+                  CupertinoIcons.doc_text_fill,
                   color: AppColors.danger,
                   size: 22,
                 ),
@@ -557,7 +559,7 @@ class _DoneStep extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.download_rounded, color: AppColors.navy),
+              const Icon(CupertinoIcons.arrow_down_to_line, color: AppColors.navy),
             ],
           ),
         ),
@@ -624,7 +626,7 @@ class _BottomBar extends StatelessWidget {
             child: GlobalButton(
               title: 'Yuklab olish',
               leftIcon: const Icon(
-                Icons.download_rounded,
+                CupertinoIcons.arrow_down_to_line,
                 size: 18,
                 color: AppColors.gold,
               ),
@@ -649,13 +651,9 @@ class _BottomBar extends StatelessWidget {
           color: AppColors.navy,
           borderRadius: BorderRadius.circular(AppRadius.lg),
         ),
-        child: const SizedBox(
-          width: 22,
-          height: 22,
-          child: CircularProgressIndicator(
-            strokeWidth: 2.4,
-            valueColor: AlwaysStoppedAnimation(AppColors.gold),
-          ),
+        child: const AdolatLoader(
+          size: 22,
+          color: AppColors.gold,
         ),
       );
     }
@@ -663,7 +661,7 @@ class _BottomBar extends StatelessWidget {
     return GlobalButton(
       title: 'PDF hujjatni yaratish',
       leftIcon: const Icon(
-        Icons.file_download_outlined,
+        CupertinoIcons.cloud_download,
         size: 18,
         color: AppColors.gold,
       ),

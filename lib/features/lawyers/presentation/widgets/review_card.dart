@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
@@ -66,7 +67,7 @@ class ReviewCard extends StatelessWidget {
             Row(
               children: [
                 const Icon(
-                  Icons.verified_outlined,
+                  CupertinoIcons.checkmark_seal,
                   size: 13,
                   color: AppColors.online,
                 ),

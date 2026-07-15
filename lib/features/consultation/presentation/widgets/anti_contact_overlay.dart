@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
@@ -51,7 +52,7 @@ class AntiContactOverlay extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
-                  Icons.warning_amber_rounded,
+                  CupertinoIcons.exclamationmark_triangle,
                   color: AppColors.goldDark,
                   size: 30,
                 ),

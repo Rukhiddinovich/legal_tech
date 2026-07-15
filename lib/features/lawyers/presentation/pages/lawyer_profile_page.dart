@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,6 +8,8 @@ import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/constants/view_status.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/router/app_route_names.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/widgets/adolat_loader.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/global_text.dart';
@@ -59,11 +62,11 @@ class _ProfileView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _RoundHeaderButton(
-                      icon: Icons.arrow_back_ios_new_rounded,
+                      icon: CupertinoIcons.back,
                       onTap: () => Navigator.pop(context),
                     ),
                     _RoundHeaderButton(
-                      icon: Icons.favorite_border_rounded,
+                      icon: CupertinoIcons.heart,
                       onTap: () {},
                     ),
                   ],
@@ -379,7 +382,7 @@ class _ReviewsList extends StatelessWidget {
           return const Padding(
             padding: EdgeInsets.symmetric(vertical: 24),
             child: Center(
-              child: CircularProgressIndicator(color: AppColors.navy),
+              child: AdolatLoader(),
             ),
           );
         }
@@ -422,10 +425,9 @@ class _BottomBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           child: InkWell(
             borderRadius: BorderRadius.circular(15),
-            onTap: () => Navigator.pushNamed(
-              context,
+            onTap: () => context.push(
               AppRouteNames.checkout,
-              arguments: lawyer,
+              extra: lawyer,
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 16),
