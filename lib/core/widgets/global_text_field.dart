@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:legal_tech/core/constants/app_colors.dart';
 import 'package:legal_tech/core/constants/app_icons.dart';
 
@@ -33,9 +34,7 @@ class GlobalTextField extends StatefulWidget {
     this.maxLength,
     this.contentPadding,
     this.borderRadius,
-    this.floatingLabelBehavior,
-    this.label,
-    this.textColor,
+    this.floatingLabelBehavior, this.label, this.textColor,
     this.customBorderRadius,
     this.onSubmitted,
   });
@@ -78,17 +77,19 @@ class GlobalTextField extends StatefulWidget {
 class _GlobalTextFieldState extends State<GlobalTextField> {
   bool _isPasswordVisible = false;
 
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       onTap: widget.onTap,
       focusNode: widget.focusNode,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Errors Fill All Fields";
-        }
-        return null;
-      },
+      validator: widget.validator ??
+          (value) {
+            if (value == null || value.isEmpty) {
+              return "Maydonni to'ldiring".tr();
+            }
+            return null;
+          },
 
       onTapOutside: (event) {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -107,13 +108,12 @@ class _GlobalTextFieldState extends State<GlobalTextField> {
       obscureText:
           widget.textInputType == TextInputType.visiblePassword &&
           !_isPasswordVisible,
-      style: TextStyle(
-        color: widget.textColor ?? AppColors.c1C1B1D,
-        fontSize: 18,
-        fontWeight: FontWeight.w500,
-        fontFamily: "Manrope",
+      style: GoogleFonts.manrope(
+        color: widget.textColor ?? AppColors.textPrimary,
+        fontSize: widget.fontSize ?? 18,
+        fontWeight: widget.fontWeight ?? FontWeight.w500,
       ),
-      cursorColor: widget.textColor ?? AppColors.c1C1B1D,
+      cursorColor: widget.textColor ?? AppColors.textPrimary,
       cursorHeight: 20,
       decoration: InputDecoration(
         counter: const SizedBox.shrink(),
@@ -140,8 +140,7 @@ class _GlobalTextFieldState extends State<GlobalTextField> {
         prefixIcon: widget.prefixIcon,
         hintText: widget.hintText?.tr(),
         hintStyle: TextStyle(
-          color:
-              widget.hintTextColor ?? AppColors.c4A5565.withValues(alpha: 0.72),
+          color: widget.hintTextColor ?? AppColors.textSecondary.withValues(alpha: 0.72),
           fontSize: widget.fontSize ?? 16,
           fontWeight: widget.fontWeight ?? FontWeight.w500,
         ),
@@ -156,7 +155,7 @@ class _GlobalTextFieldState extends State<GlobalTextField> {
         border: _buildBorder(),
         disabledBorder: _buildBorder(),
         enabledBorder: _buildBorder(),
-        focusedBorder: _buildBorder(color: AppColors.cF2F2F2),
+        focusedBorder: _buildBorder(color: AppColors.borderStrong),
         errorBorder: _buildBorder(color: Colors.red),
         focusedErrorBorder: _buildBorder(color: Colors.red),
       ),
@@ -164,14 +163,13 @@ class _GlobalTextFieldState extends State<GlobalTextField> {
   }
 
   OutlineInputBorder _buildBorder({Color? color}) {
-    final radius =
-        widget.customBorderRadius ??
+    final radius = widget.customBorderRadius ??
         BorderRadius.circular(widget.borderRadius ?? 12);
     return OutlineInputBorder(
       borderRadius: radius,
       borderSide: BorderSide(
         width: 1,
-        color: color ?? widget.borderColor ?? AppColors.cF2F2F2,
+        color: color ?? widget.borderColor ?? AppColors.borderStrong,
       ),
     );
   }

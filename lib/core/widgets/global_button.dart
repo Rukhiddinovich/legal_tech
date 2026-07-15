@@ -54,25 +54,26 @@ class GlobalButton extends StatelessWidget {
       child: Container(
         decoration: isEnabled
             ? (gradient != null
-                  ? BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: gradient!,
-                        begin: gradientBegin ?? Alignment.topCenter,
-                        end: gradientEnd ?? Alignment.bottomCenter,
-                      ),
-                      borderRadius: BorderRadius.circular(radius),
-                    )
-                  : BoxDecoration(
-                      color: color,
-                      borderRadius: BorderRadius.circular(radius),
-                    ))
+            ? BoxDecoration(
+          gradient: LinearGradient(
+            colors: gradient!,
+            begin: gradientBegin ?? Alignment.topCenter,
+            end: gradientEnd ?? Alignment.bottomCenter,
+          ),
+          borderRadius: BorderRadius.circular(radius),
+        )
             : BoxDecoration(
-                color: borderColor != null
-                    ? Colors.transparent
-                    : AppColors.cF2F2F7,
-                borderRadius: BorderRadius.circular(radius),
-              ),
+          color: color,
+          borderRadius: BorderRadius.circular(radius),
+        ))
+            : BoxDecoration(
+          color: borderColor != null
+              ? Colors.transparent
+              : AppColors.chipBg,
+          borderRadius: BorderRadius.circular(radius),
+        ),
         child: ElevatedButton(
+
           onPressed: isLoading ? null : onTap,
           style: ElevatedButton.styleFrom(
             backgroundColor: gradient != null ? Colors.transparent : color,
@@ -193,3 +194,4 @@ class GlobalButton extends StatelessWidget {
     return const SizedBox.shrink();
   }
 }
+

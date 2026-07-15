@@ -1,8 +1,10 @@
-import 'package:dartz/dartz.dart';
-import 'package:legal_tech/core/errors/failures.dart';
-import 'package:legal_tech/features/theme/domain/entities/theme_entity.dart';
+import 'package:flutter/material.dart';
 
-abstract class ThemeRepository {
-  Future<Either<Failure, ThemeEntity>> getTheme();
-  Future<Either<Failure, void>> setTheme(ThemeEntity theme);
+/// Mavzu (theme) holatini saqlash/olish uchun abstraksiya.
+///
+/// Prezentatsiya qatlami faqat shu interfeysga bog'lanadi (DIP) —
+/// implementatsiya in-memory, Hive yoki API bo'lishi mumkin.
+abstract interface class ThemeRepository {
+  ThemeMode getThemeMode();
+  Future<void> saveThemeMode(ThemeMode mode);
 }

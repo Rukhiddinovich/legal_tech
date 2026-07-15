@@ -14,9 +14,7 @@ void myPrint(dynamic data) {
 }
 
 Future<DateTime?> showMyDatePicker(
-  BuildContext context,
-  DateTime dateTime,
-) async {
+    BuildContext context, DateTime dateTime) async {
   return await showDatePicker(
     context: context,
     initialDate: dateTime,
@@ -35,13 +33,14 @@ Future<TimeOfDay?> showTimePickerDialog({
     builder: (BuildContext context, Widget? child) {
       return Theme(
         data: ThemeData.light().copyWith(
-          primaryColor: AppColors.c101828,
+          primaryColor: AppColors.navy,
           buttonTheme: const ButtonThemeData(
             textTheme: ButtonTextTheme.primary,
           ),
-          colorScheme: const ColorScheme.light(
-            primary: AppColors.c101828,
-          ).copyWith(secondary: AppColors.c101828),
+          colorScheme:
+              const ColorScheme.light(primary: AppColors.navy).copyWith(
+            secondary: AppColors.navy,
+          ),
         ),
         child: child!,
       );
@@ -50,6 +49,7 @@ Future<TimeOfDay?> showTimePickerDialog({
   return pickedTime;
 }
 
+
 class TimeOutConstants {
   static int connectTimeout = 30;
   static int receiveTimeout = 25;
@@ -57,7 +57,11 @@ class TimeOutConstants {
 }
 
 class MyCircularProgressIndicator extends StatelessWidget {
-  const MyCircularProgressIndicator({super.key, this.radius = 10, this.color});
+  const MyCircularProgressIndicator({
+    super.key,
+    this.radius = 10,
+    this.color,
+  });
 
   final double radius;
   final Color? color;
@@ -67,11 +71,14 @@ class MyCircularProgressIndicator extends StatelessWidget {
     return Center(
       child: CupertinoActivityIndicator(
         radius: radius,
-        color: color ?? AppColors.c101828,
+        color: color ?? AppColors.navy,
       ),
     );
   }
 }
 
+
+
 // String mainBaseUrl = dotenv.get("baseUrl", fallback: "");
-String mapKey = "581bf156-762e-49cf-9698-795797b7f317";
+String mapKey= "581bf156-762e-49cf-9698-795797b7f317";
+

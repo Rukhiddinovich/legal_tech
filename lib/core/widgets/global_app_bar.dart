@@ -14,8 +14,7 @@ class GlobalAppBar extends StatelessWidget implements PreferredSize {
     this.iconThemeColor,
     this.leading,
     this.toolbarHeight,
-    this.autoBackBtn,
-    this.elevation,
+    this.autoBackBtn, this.elevation,
   });
 
   final Widget? title;

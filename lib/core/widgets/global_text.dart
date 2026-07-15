@@ -1,6 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+/// Ilovaning yagona matn primitivi.
+///
+/// Barcha matnlar shu vidjet orqali chiziladi. Standart shrift — Manrope;
+/// `fontFamily` orqali "Newsreader" (serif sarlavhalar) yoki "DaysOne"
+/// (tugma matnlari) tanlash mumkin. Shriftlar `google_fonts` orqali yuklanadi.
 class GlobalText extends StatelessWidget {
   const GlobalText({
     super.key,
@@ -17,6 +23,7 @@ class GlobalText extends StatelessWidget {
     this.decorationColor,
     this.isEllipsis = false,
     this.softWrap,
+    this.height,
   });
 
   final String? text;
@@ -32,25 +39,43 @@ class GlobalText extends StatelessWidget {
   final Color? decorationColor;
   final bool isEllipsis;
   final bool? softWrap;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      tr(text ?? "", context: context),
-      style: TextStyle(
-        overflow: overflow,
-        decoration: decoration ?? TextDecoration.none,
-        decorationColor: decorationColor ?? CupertinoColors.black,
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        color: color,
-        fontFamily: fontFamily ?? "Poppins",
-        letterSpacing: letterSpacing,
-      ),
+      // Kontekstsiz `tr` — lokalizatsiya ishga tushmagan bo'lsa ham
+      // xavfsiz ishlaydi (kalitni o'zini qaytaradi, crash bo'lmaydi).
+      tr(text ?? ""),
+      style: _resolveStyle(),
       maxLines: maxLines,
       textAlign: textAlign,
-      overflow: isEllipsis ? TextOverflow.ellipsis : null,
+      overflow: isEllipsis ? TextOverflow.ellipsis : overflow,
       softWrap: softWrap,
     );
+  }
+
+  TextStyle _resolveStyle() {
+    final base = TextStyle(
+      decoration: decoration ?? TextDecoration.none,
+      decorationColor: decorationColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: color,
+      letterSpacing: letterSpacing,
+      height: height,
+    );
+
+    switch (fontFamily) {
+      case 'Newsreader':
+        return GoogleFonts.newsreader(textStyle: base);
+      case 'DaysOne':
+        return GoogleFonts.daysOne(textStyle: base);
+      case null:
+      case 'Manrope':
+        return GoogleFonts.manrope(textStyle: base);
+      default:
+        return base.copyWith(fontFamily: fontFamily);
+    }
   }
 }
