@@ -1,7 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/utils/thousands_input_formatter.dart';
+import '../../../../core/utils/passport_input_formatter.dart';
 import '../../../../core/widgets/adolat_loader.dart';
 
 import '../../../../core/constants/app_colors.dart';
@@ -379,6 +382,7 @@ class _Field extends StatelessWidget {
   Widget build(BuildContext context) {
     final isNumber = field.type == DocumentFieldType.number;
     final isMultiline = field.type == DocumentFieldType.multiline;
+    final isPassport = field.key == 'passport';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -386,14 +390,33 @@ class _Field extends StatelessWidget {
         FieldLabel(field.label),
         GlobalTextField(
           hintText: field.hint,
-          onChanged: onChanged,
+          onChanged: (val) {
+            // Agar amount bo'lsa probellarsiz haqiqiy qiymatni bloc'ga yuboramiz
+            if (isNumber) {
+              final digits = val.replaceAll(RegExp(r'[^0-9]'), '');
+              onChanged(digits);
+            } else {
+              onChanged(val);
+            }
+          },
           textInputType: isNumber ? TextInputType.number : TextInputType.text,
           textInputAction:
               isMultiline ? TextInputAction.newline : TextInputAction.next,
-          formatter:
-              isNumber ? [FilteringTextInputFormatter.digitsOnly] : null,
+          formatter: isNumber
+              ? [FilteringTextInputFormatter.digitsOnly, ThousandsInputFormatter()]
+              : isPassport
+                  ? [PassportInputFormatter()]
+                  : null,
           maxLine: isMultiline ? 4 : 1,
-          validator: (_) => null,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return "Maydonni to'ldiring".tr();
+            }
+            if (isPassport && value.length != 9) {
+              return "Pasport 2 ta harf va 7 ta sondan iborat bo'lishi kerak";
+            }
+            return null;
+          },
         ),
       ],
     );
@@ -588,12 +611,8 @@ class _BottomBar extends StatelessWidget {
           left: 0,
           right: 0,
           bottom: 0,
-          child: Container(
-            padding: EdgeInsets.fromLTRB(16, 14, 16, bottomPad + 14),
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              border: const Border(top: BorderSide(color: AppColors.divider)),
-            ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 30),
             child: _buildButton(context, state),
           ),
         );
@@ -614,10 +633,6 @@ class _BottomBar extends StatelessWidget {
               color: Theme.of(context).cardColor,
               textColor: Theme.of(context).colorScheme.onSurface,
               borderColor: AppColors.borderStrong,
-              radius: 16,
-              fontFamily: 'Manrope',
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
             ),
           ),
           const SizedBox(width: 11),
@@ -633,10 +648,6 @@ class _BottomBar extends StatelessWidget {
               onTap: () {},
               color: AppColors.navy,
               textColor: AppColors.white,
-              radius: 16,
-              fontFamily: 'Manrope',
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
             ),
           ),
         ],
@@ -646,10 +657,10 @@ class _BottomBar extends StatelessWidget {
     if (state.isGenerating) {
       return Container(
         alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
           color: AppColors.navy,
-          borderRadius: BorderRadius.circular(AppRadius.lg),
+          borderRadius: BorderRadius.circular(100),
         ),
         child: const AdolatLoader(
           size: 22,
@@ -670,10 +681,6 @@ class _BottomBar extends StatelessWidget {
           : null,
       color: AppColors.navy,
       textColor: AppColors.white,
-      radius: 16,
-      fontFamily: 'Manrope',
-      fontSize: 15,
-      fontWeight: FontWeight.w700,
     );
   }
 }

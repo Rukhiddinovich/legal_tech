@@ -103,7 +103,9 @@ class _GlobalTextFieldState extends State<GlobalTextField> {
       maxLines: widget.maxLine ?? 1,
       onChanged: widget.onChanged,
       controller: widget.controller,
-      keyboardType: widget.textInputType,
+      keyboardType: (widget.textInputAction == TextInputAction.newline && (widget.maxLine ?? 1) != 1)
+          ? TextInputType.multiline
+          : widget.textInputType,
       textInputAction: widget.textInputAction,
       obscureText:
           widget.textInputType == TextInputType.visiblePassword &&

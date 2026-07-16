@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:legal_tech/core/constants/app_icons.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/router/app_route_names.dart';
@@ -160,7 +161,7 @@ class _SplashPageState extends State<SplashPage>
                       child: Opacity(
                         opacity: _logoOpacity.value,
                         child: Image.asset(
-                          'assets/images/legal_tech_transparent_logo.png',
+                          AppImages.legalTechTransparentLogo,
                           width: 180,
                           fit: BoxFit.contain,
                         ),
@@ -189,7 +190,7 @@ class _SplashPageState extends State<SplashPage>
                       child: Column(
                         children: [
                           GlobalText(
-                            text: 'ADOLAT',
+                            text: 'Legal Tech',
                             fontFamily: 'Newsreader',
                             fontSize: 22,
                             fontWeight: FontWeight.w600,
@@ -198,7 +199,7 @@ class _SplashPageState extends State<SplashPage>
                           ),
                           const SizedBox(height: 6),
                           GlobalText(
-                            text: 'HUQUQIY YORDAM EKOTIZIMI',
+                            text: 'Sizning huquqiy yordamchingiz',
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
                             color: AppColors.gold,

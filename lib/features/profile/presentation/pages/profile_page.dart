@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -211,6 +212,63 @@ class _MenuTile extends StatelessWidget {
 }
 
 class _SettingsSection extends StatelessWidget {
+  void _showLanguageDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Theme.of(context).cardColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GlobalText(
+                text: 'Tilni tanlang / Выберите язык',
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              const SizedBox(height: 16),
+              ListTile(
+                title: GlobalText(
+                  text: "O'zbekcha",
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                trailing: context.locale.languageCode == 'uz'
+                    ? const Icon(Icons.check, color: AppColors.gold)
+                    : null,
+                onTap: () {
+                  context.setLocale(const Locale('uz', 'UZ'));
+                  Navigator.pop(ctx);
+                },
+              ),
+              ListTile(
+                title: GlobalText(
+                  text: "Русский",
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                trailing: context.locale.languageCode == 'ru'
+                    ? const Icon(Icons.check, color: AppColors.gold)
+                    : null,
+                onTap: () {
+                  context.setLocale(const Locale('ru', 'RU'));
+                  Navigator.pop(ctx);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -263,7 +321,7 @@ class _SettingsSection extends StatelessWidget {
               Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () => _showLanguageDialog(context),
                   child: Padding(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -284,7 +342,9 @@ class _SettingsSection extends StatelessWidget {
                           ),
                         ),
                         GlobalText(
-                          text: 'O\'zbekcha',
+                          text: context.locale.languageCode == 'ru'
+                              ? 'Русский'
+                              : 'O\'zbekcha',
                           fontSize: 13,
                           color: AppColors.textMuted,
                         ),
