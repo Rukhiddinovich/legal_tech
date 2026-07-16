@@ -34,6 +34,7 @@ dependencies:
   zoom_tap_animation: ^1.1.0
   toastification: ^3.0.3
   mask_text_input_formatter: ^2.9.0
+  modal_bottom_sheet: ^3.0.0
 
   #  rout
   go_router: ^17.3.0

@@ -19,7 +19,7 @@ class DocumentMockDataSource implements DocumentDataSource {
           DocumentField(
             key: 'full_name',
             label: 'F.I.SH. (to\'liq)',
-            hint: 'Rahimov Jasur Akmalovich',
+            hint: "Adam John Doe",
           ),
           DocumentField(
             key: 'passport',
@@ -88,7 +88,7 @@ class DocumentMockDataSource implements DocumentDataSource {
           DocumentField(
             key: 'full_name',
             label: 'F.I.SH. (to\'liq)',
-            hint: 'Rahimov Jasur Akmalovich',
+            hint: "Adam John Doe",
           ),
           DocumentField(
             key: 'organ',

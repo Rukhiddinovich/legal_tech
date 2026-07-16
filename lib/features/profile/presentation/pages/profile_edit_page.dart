@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/image_picker_helper.dart';
 import '../../../../core/widgets/image_picker_bottom_sheet.dart';
@@ -16,9 +17,9 @@ class ProfileEditPage extends StatefulWidget {
 class _ProfileEditPageState extends State<ProfileEditPage> {
   File? _selectedImage;
 
-  final TextEditingController _firstNameController = TextEditingController(text: 'Jasur');
-  final TextEditingController _lastNameController = TextEditingController(text: 'Rahimov');
-  final TextEditingController _phoneController = TextEditingController(text: '+998 90 123 45 67');
+  final TextEditingController _firstNameController = TextEditingController(text: 'John');
+  final TextEditingController _lastNameController = TextEditingController(text: 'Doe');
+  final TextEditingController _phoneController = TextEditingController(text: '+998 91 222 64 44');
 
   @override
   void dispose() {
@@ -29,7 +30,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   }
 
   void _showImagePicker(BuildContext context) {
-    showModalBottomSheet(
+    showBarModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) {

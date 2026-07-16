@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
@@ -56,7 +57,7 @@ class _CalculatorViewState extends State<_CalculatorView> {
 
   Future<void> _pickType() async {
     final bloc = context.read<FeeCalculatorBloc>();
-    final selected = await showModalBottomSheet<FeeType>(
+    final selected = await showBarModalBottomSheet<FeeType>(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (_) => _TypePickerSheet(current: bloc.state.type),

@@ -1,7 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/router/app_route_names.dart';
@@ -10,12 +14,138 @@ import '../../../../core/widgets/global_text.dart';
 import '../../../../core/widgets/gradient_avatar.dart';
 import '../../../theme/presentation/bloc/theme_bloc.dart';
 
-/// "Profil" tabi — foydalanuvchi ma'lumotlari va sozlamalar.
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
-  static const _userName = 'Jasur Rahimov';
-  static const _phone = '+998 90 ••• •• 67';
+  static const _userName = "John Doe";
+  static const _phone = '+998 91 ••• •• 44';
+
+  void _showHelpCenterBottomSheet(BuildContext context) {
+    showBarModalBottomSheet(
+      context: context,
+      backgroundColor: Theme.of(context).cardColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GlobalText(
+                text: 'Yordam markazi',
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              const SizedBox(height: 8),
+              GlobalText(
+                text: "Biz bilan bog'lanish uchun quyidagi usullardan birini tanlang",
+                fontSize: 14,
+                color: AppColors.textMuted,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  side: BorderSide(
+                    color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+                  ),
+                ),
+                leading: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: AppColors.gold.withValues(alpha: 0.15),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.phone_rounded, color: AppColors.gold),
+                ),
+                title: GlobalText(
+                  text: 'Telefon orqali',
+                  fontSize: 13,
+                  color: AppColors.textMuted,
+                ),
+                subtitle: GlobalText(
+                  text: '+998 91 222 64 44',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                onTap: () {
+                  launchUrl(Uri.parse('tel:+998912226444'));
+                  Navigator.pop(ctx);
+                },
+              ),
+              const SizedBox(height: 12),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  side: BorderSide(
+                    color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
+                  ),
+                ),
+                leading: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withValues(alpha: 0.15),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.telegram, color: Colors.blue),
+                ),
+                title: GlobalText(
+                  text: 'Telegram orqali',
+                  fontSize: 13,
+                  color: AppColors.textMuted,
+                ),
+                subtitle: GlobalText(
+                  text: '@rukhiddinovich',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                onTap: () {
+                  launchUrl(
+                    Uri.parse('https://t.me/rukhiddinovich'),
+                    mode: LaunchMode.externalApplication,
+                  );
+                  Navigator.pop(ctx);
+                },
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showCupertinoDialog(
+      context: context,
+      builder: (ctx) => CupertinoAlertDialog(
+        title: const Text("Tizimdan chiqish"),
+        content: const Text("Haqiqatan ham hisobingizdan chiqmoqchimisiz?"),
+        actions: [
+          CupertinoDialogAction(
+            child: const Text("Bekor qilish"),
+            onPressed: () => Navigator.pop(ctx),
+          ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.pop(ctx);
+              // TODO: Implement actual logout logic
+            },
+            child: const Text("Chiqish"),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +174,10 @@ class ProfilePage extends StatelessWidget {
               items: [
                 _MenuData(Icons.gavel_rounded, 'Konsultatsiyalarim'),
                 _MenuData(Icons.description_outlined, 'Hujjatlarim'),
-                _MenuData(Icons.favorite_border_rounded, 'Saqlangan advokatlar'),
+                _MenuData(
+                  Icons.favorite_border_rounded,
+                  'Saqlangan advokatlar',
+                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -53,21 +186,34 @@ class ProfilePage extends StatelessWidget {
             _MenuSection(
               title: 'Boshqa',
               items: [
-                _MenuData(Icons.help_outline_rounded, 'Yordam markazi'),
                 _MenuData(
-                  Icons.shield_outlined, 
+                  Icons.help_outline_rounded,
+                  'Yordam markazi',
+                  onTap: () => _showHelpCenterBottomSheet(context),
+                ),
+                _MenuData(
+                  Icons.shield_outlined,
                   'Maxfiylik siyosati',
-                  onTap: () async {
-                   Uri.parse('https://github.com/SizningUzeringiz/legal_tech/blob/main/PRIVACY_POLICY.md');
+                  onTap: () {
+                    launchUrl(
+                      Uri.parse(
+                        "https://github.com/Rukhiddinovich/legal_tech/blob/main/PRIVACY_POLICY.md",
+                      ),
+                    );
                   },
                 ),
-                _MenuData(Icons.logout_rounded, 'Chiqish', danger: true),
+                _MenuData(
+                  Icons.logout_rounded,
+                  'Chiqish',
+                  danger: true,
+                  onTap: () => _showLogoutDialog(context),
+                ),
               ],
             ),
             const SizedBox(height: 20),
             Center(
               child: GlobalText(
-                text: 'Adolat · v1.0.0',
+                text: 'LegalTech · v1.0.0',
                 fontSize: 12,
                 color: AppColors.textMuted,
               ),
@@ -126,8 +272,11 @@ class _ProfileHeader extends StatelessWidget {
                 color: AppColors.white.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.edit_outlined,
-                  size: 16, color: AppColors.white),
+              child: const Icon(
+                Icons.edit_outlined,
+                size: 16,
+                color: AppColors.white,
+              ),
             ),
           ),
         ],
@@ -172,8 +321,7 @@ class _MenuSection extends StatelessWidget {
             children: [
               for (int i = 0; i < items.length; i++) ...[
                 _MenuTile(data: items[i]),
-                if (i < items.length - 1)
-                  const Divider(height: 1, indent: 56),
+                if (i < items.length - 1) const Divider(height: 1, indent: 56),
               ],
             ],
           ),
@@ -213,8 +361,10 @@ class _MenuTile extends StatelessWidget {
                 ),
               ),
               if (!data.danger)
-                const Icon(Icons.chevron_right_rounded,
-                    color: AppColors.textHint),
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  color: AppColors.textHint,
+                ),
             ],
           ),
         ),
@@ -225,7 +375,7 @@ class _MenuTile extends StatelessWidget {
 
 class _SettingsSection extends StatelessWidget {
   void _showLanguageDialog(BuildContext context) {
-    showModalBottomSheet(
+    showBarModalBottomSheet(
       context: context,
       backgroundColor: Theme.of(context).cardColor,
       shape: const RoundedRectangleBorder(
@@ -245,6 +395,11 @@ class _SettingsSection extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               ListTile(
+                leading: SvgPicture.asset(
+                  'assets/svg/uzb_flag_icn.svg',
+                  width: 24,
+                  height: 24,
+                ),
                 title: GlobalText(
                   text: "O'zbekcha",
                   fontSize: 15,
@@ -260,6 +415,11 @@ class _SettingsSection extends StatelessWidget {
                 },
               ),
               ListTile(
+                leading: SvgPicture.asset(
+                  'assets/svg/rus_flag_icn.svg',
+                  width: 24,
+                  height: 24,
+                ),
                 title: GlobalText(
                   text: "Русский",
                   fontSize: 15,
@@ -301,7 +461,10 @@ class _SettingsSection extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: Row(
                   children: [
                     Icon(
@@ -335,8 +498,10 @@ class _SettingsSection extends StatelessWidget {
                 child: InkWell(
                   onTap: () => _showLanguageDialog(context),
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
+                    ),
                     child: Row(
                       children: [
                         Icon(
@@ -361,8 +526,10 @@ class _SettingsSection extends StatelessWidget {
                           color: AppColors.textMuted,
                         ),
                         const SizedBox(width: 4),
-                        const Icon(Icons.chevron_right_rounded,
-                            color: AppColors.textHint),
+                        const Icon(
+                          Icons.chevron_right_rounded,
+                          color: AppColors.textHint,
+                        ),
                       ],
                     ),
                   ),

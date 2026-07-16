@@ -99,7 +99,7 @@ class LawyerMockDataSource implements LawyerDataSource {
     },
     {
       'id': 'l4',
-      'full_name': 'Jasur Toshmatov',
+      'full_name': "John Doe",
       'specialization': 'Jinoyat huquqi · 15 yil',
       'experience_years': 15,
       'rating': 5.0,

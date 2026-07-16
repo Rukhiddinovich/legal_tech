@@ -9,7 +9,6 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/constants/view_status.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/router/app_route_names.dart';
-import '../../../../core/widgets/adolat_loader.dart';
 import '../../../../core/widgets/global_text.dart';
 import '../../../../core/widgets/global_text_field.dart';
 import '../../../../core/widgets/gradient_avatar.dart';
@@ -23,7 +22,7 @@ import '../widgets/tool_card.dart';
 class CatalogPage extends StatelessWidget {
   const CatalogPage({super.key});
 
-  static const _userName = 'Jasur Rahimov';
+  static const _userName = "John Doe";
 
   @override
   Widget build(BuildContext context) {

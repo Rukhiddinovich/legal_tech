@@ -2,11 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Ilovaning yagona matn primitivi.
-///
-/// Barcha matnlar shu vidjet orqali chiziladi. Standart shrift — Manrope;
-/// `fontFamily` orqali "Newsreader" (serif sarlavhalar) yoki "DaysOne"
-/// (tugma matnlari) tanlash mumkin. Shriftlar `google_fonts` orqali yuklanadi.
 class GlobalText extends StatelessWidget {
   const GlobalText({
     super.key,
@@ -44,8 +39,6 @@ class GlobalText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      // Kontekstsiz `tr` — lokalizatsiya ishga tushmagan bo'lsa ham
-      // xavfsiz ishlaydi (kalitni o'zini qaytaradi, crash bo'lmaydi).
       tr(text ?? ""),
       style: _resolveStyle(),
       maxLines: maxLines,
