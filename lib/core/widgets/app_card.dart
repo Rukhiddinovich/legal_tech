@@ -30,6 +30,7 @@ class AppCard extends StatelessWidget {
     final bg = color ?? Theme.of(context).cardColor;
 
     final container = Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(radius),

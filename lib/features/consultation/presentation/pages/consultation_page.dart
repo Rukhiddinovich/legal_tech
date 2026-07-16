@@ -355,7 +355,6 @@ class _InputBar extends StatelessWidget {
                 textInputType: TextInputType.text,
                 textInputAction: TextInputAction.send,
                 onSubmitted: (_) => onSend(),
-                maxLine: 4,
                 validator: (_) => null,
                 fillColor: Colors.transparent,
                 borderColor: Colors.transparent,

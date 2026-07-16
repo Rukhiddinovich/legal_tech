@@ -73,7 +73,6 @@ class GlobalButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(radius),
         ),
         child: ElevatedButton(
-
           onPressed: isLoading ? null : onTap,
           style: ElevatedButton.styleFrom(
             backgroundColor: gradient != null ? Colors.transparent : color,
@@ -106,7 +105,7 @@ class GlobalButton extends StatelessWidget {
         text: title!,
         fontSize: fontSize ?? 16,
         fontWeight: fontWeight ?? FontWeight.w600,
-        fontFamily: fontFamily ?? "DaysOne", // qo'shildi
+        fontFamily: fontFamily ?? "DaysOne",
         color: textColor,
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,

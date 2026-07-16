@@ -10,14 +10,13 @@ import '../../features/documents/presentation/pages/document_generator_page.dart
 import '../../features/lawyers/domain/entities/lawyer.dart';
 import '../../features/lawyers/presentation/pages/lawyer_profile_page.dart';
 import '../../features/payment/presentation/pages/checkout_page.dart';
-import '../../features/tab_shell/presentation/pages/tab_shell_page.dart';
+import '../../features/tab_shell/presentation/pages/tab_box.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/widgets/global_text.dart';
 import 'app_route_names.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-/// Markazlashtirilgan GoRouter navigatsiyasi.
 class AppRouter {
   const AppRouter._();
 
@@ -34,7 +33,7 @@ class AppRouter {
       GoRoute(
         path: AppRouteNames.tabShell,
         name: AppRouteNames.tabShell,
-        builder: (context, state) => const TabShellPage(),
+        builder: (context, state) => const TabBox(),
       ),
       GoRoute(
         path: AppRouteNames.lawyerProfile,

@@ -26,14 +26,14 @@ class CheckoutPage extends StatelessWidget {
   final Lawyer lawyer;
 
   ConsultationOrder get _order => ConsultationOrder(
-        lawyerId: lawyer.id,
-        lawyerName: lawyer.fullName,
-        lawyerSpecialization: lawyer.specialization,
-        serviceType: 'Tezkor konsultatsiya',
-        durationLabel: '${lawyer.sessionMinutes} daqiqagacha',
-        format: 'Chat / Video',
-        price: lawyer.pricePerSession,
-      );
+    lawyerId: lawyer.id,
+    lawyerName: lawyer.fullName,
+    lawyerSpecialization: lawyer.specialization,
+    serviceType: 'Tezkor konsultatsiya',
+    durationLabel: '${lawyer.sessionMinutes} daqiqagacha',
+    format: 'Chat / Video',
+    price: lawyer.pricePerSession,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -62,32 +62,28 @@ class _CheckoutView extends StatelessWidget {
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: Stack(
+        body: Column(
           children: [
-            Column(
-              children: [
-                _TopBar(title: 'To\'lov'),
-                Expanded(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.fromLTRB(16, 18, 16, 130),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _OrderSummaryCard(lawyer: lawyer, order: order),
-                        const SizedBox(height: 20),
-                        const SectionHeader(title: 'To\'lov usuli'),
-                        const SizedBox(height: 10),
-                        const _PaymentMethods(),
-                        const SizedBox(height: 18),
-                        _PriceBreakdown(order: order),
-                        const SizedBox(height: 14),
-                        const _EscrowBanner(),
-                      ],
-                    ),
-                  ),
+            _TopBar(title: 'To\'lov'),
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(16, 18, 16, 30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _OrderSummaryCard(lawyer: lawyer, order: order),
+                    const SizedBox(height: 20),
+                    const SectionHeader(title: 'To\'lov usuli'),
+                    const SizedBox(height: 10),
+                    const _PaymentMethods(),
+                    const SizedBox(height: 18),
+                    _PriceBreakdown(order: order),
+                    const SizedBox(height: 14),
+                    const _EscrowBanner(),
+                  ],
                 ),
-              ],
+              ),
             ),
             _PayBar(order: order),
           ],
@@ -246,16 +242,16 @@ class _PaymentMethods extends StatelessWidget {
           children: PaymentMethod.all
               .map(
                 (m) => Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: _PaymentTile(
-                    method: m,
-                    selected: state.selectedMethodId == m.id,
-                    onTap: () => context
-                        .read<PaymentBloc>()
-                        .add(PaymentMethodSelected(m.id)),
-                  ),
-                ),
-              )
+              padding: const EdgeInsets.only(bottom: 10),
+              child: _PaymentTile(
+                method: m,
+                selected: state.selectedMethodId == m.id,
+                onTap: () => context
+                    .read<PaymentBloc>()
+                    .add(PaymentMethodSelected(m.id)),
+              ),
+            ),
+          )
               .toList(),
         );
       },
@@ -462,7 +458,7 @@ class _EscrowBanner extends StatelessWidget {
                 children: [
                   TextSpan(
                     text:
-                        'To\'lov platforma hisobida saqlanadi va konsultatsiya '
+                    'To\'lov platforma hisobida saqlanadi va konsultatsiya '
                         'yakunlangach advokatga o\'tkaziladi.',
                     style: AppTextStyles.sans(
                       fontSize: 12,
@@ -488,35 +484,22 @@ class _PayBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bottomPad = MediaQuery.paddingOf(context).bottom;
-    return Positioned(
-      left: 0,
-      right: 0,
-      bottom: 0,
-      child: Container(
-        padding: EdgeInsets.fromLTRB(16, 14, 16, bottomPad + 14),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-          border: const Border(top: BorderSide(color: AppColors.divider)),
-        ),
-        child: BlocBuilder<PaymentBloc, PaymentState>(
-          builder: (context, state) {
-            if (state.isProcessing) {
-              return const _ProcessingButton();
-            }
-            return GlobalButton(
-              title: '${Formatters.soum(order.total)} to\'lash',
-              onTap: () => context.read<PaymentBloc>().add(const PaymentRequested()),
-              color: AppColors.navy,
-              textColor: AppColors.white,
-              radius: 16,
-              fontFamily: 'Manrope',
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-            );
-          },
-        ),
-      ),
+    return BlocBuilder<PaymentBloc, PaymentState>(
+      builder: (context, state) {
+        if (state.isProcessing) {
+          return const Padding(
+            padding: EdgeInsets.fromLTRB(16, 0, 16, 30),
+            child: _ProcessingButton(),
+          );
+        }
+        return GlobalButton(
+          onTap: () => context.read<PaymentBloc>().add(const PaymentRequested()),
+          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 30),
+          title: '${Formatters.soum(order.total)} to\'lash',
+          color: AppColors.navy,
+          textColor: AppColors.white,
+        );
+      },
     );
   }
 }

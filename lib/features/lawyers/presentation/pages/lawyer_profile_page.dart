@@ -1,14 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:legal_tech/core/router/app_route_names.dart';
+import 'package:legal_tech/core/widgets/global_app_bar.dart';
+import 'package:legal_tech/core/widgets/global_button.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/constants/view_status.dart';
 import '../../../../core/di/injection_container.dart';
-import '../../../../core/router/app_route_names.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/widgets/adolat_loader.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/app_card.dart';
@@ -27,7 +29,8 @@ class LawyerProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<LawyerProfileBloc>(
-      create: (_) => sl<LawyerProfileBloc>()..add(LawyerReviewsRequested(lawyer.id)),
+      create: (_) =>
+          sl<LawyerProfileBloc>()..add(LawyerReviewsRequested(lawyer.id)),
       child: _ProfileView(lawyer: lawyer),
     );
   }
@@ -40,92 +43,74 @@ class _ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final topPad = MediaQuery.paddingOf(context).top;
-
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Stack(
+      appBar: GlobalAppBar(
+        actionWidget: Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: _RoundHeaderButton(icon: CupertinoIcons.heart, onTap: () {}),
+        ),
+        backgroundColor: AppColors.navy,
+      ),
+
+      body: Column(
         children: [
-          Column(
-            children: [
-              // ── Navy header ──
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.fromLTRB(
-                  AppSpacing.xl,
-                  topPad + 12,
-                  AppSpacing.xl,
-                  66,
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(16, 54, 16, 30),
+              children: [
+                _ProfileCard(lawyer: lawyer),
+                const SizedBox(height: 20),
+                _label('Yo\'nalishlar'),
+                const SizedBox(height: 10),
+                _DirectionChips(directions: lawyer.directions),
+                const SizedBox(height: 18),
+                _PriceCard(lawyer: lawyer),
+                const SizedBox(height: 20),
+                _label('Advokat haqida'),
+                const SizedBox(height: 8),
+                GlobalText(
+                  text: lawyer.about,
+                  fontSize: 13,
+                  color: AppColors.textSecondary,
+                  height: 1.6,
                 ),
-                color: AppColors.navy,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _RoundHeaderButton(
-                      icon: CupertinoIcons.back,
-                      onTap: () => Navigator.pop(context),
-                    ),
-                    _RoundHeaderButton(
-                      icon: CupertinoIcons.heart,
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.only(bottom: 140),
-                  child: Transform.translate(
-                    offset: const Offset(0, -48),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _ProfileCard(lawyer: lawyer),
-                          const SizedBox(height: 20),
-                          _label('Yo\'nalishlar'),
-                          const SizedBox(height: 10),
-                          _DirectionChips(directions: lawyer.directions),
-                          const SizedBox(height: 18),
-                          _PriceCard(lawyer: lawyer),
-                          const SizedBox(height: 20),
-                          _label('Advokat haqida'),
-                          const SizedBox(height: 8),
-                          GlobalText(
-                            text: lawyer.about,
-                            fontSize: 13,
-                            color: AppColors.textSecondary,
-                            height: 1.6,
-                          ),
-                          const SizedBox(height: 22),
-                          _label('Sharhlar (${lawyer.reviewsCount})'),
-                          const SizedBox(height: 10),
-                          const _ReviewsList(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+                const SizedBox(height: 22),
+                _label('Sharhlar (${lawyer.reviewsCount})'),
+                const SizedBox(height: 10),
+                const _ReviewsList(),
+              ],
+            ),
           ),
-          _BottomBar(lawyer: lawyer),
+          GlobalButton(
+            onTap: () => context.push(AppRouteNames.checkout, extra: lawyer),
+            padding: EdgeInsets.only(left: 16, right: 16,bottom: 30),
+            title: "Konsultatsiyani boshlash",
+            color: AppColors.navy,
+            textColor: AppColors.white,
+            rightIcon:  Text(
+               ' · ${Formatters.soum(lawyer.pricePerSession)}',
+              style: AppTextStyles.sans(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: AppColors.gold,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _label(String text) => Padding(
-        padding: const EdgeInsets.only(left: 4),
-        child: GlobalText(
-          text: text,
-          fontSize: 13,
-          fontWeight: FontWeight.w700,
-          color: AppColors.textPrimary,
-        ),
-      );
+    padding: const EdgeInsets.only(left: 4),
+    child: GlobalText(
+      text: text,
+      fontSize: 13,
+      fontWeight: FontWeight.w700,
+      color: AppColors.textPrimary,
+    ),
+  );
 }
 
 class _RoundHeaderButton extends StatelessWidget {
@@ -255,11 +240,7 @@ class _StatCell extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurface,
             ),
             const SizedBox(height: 2),
-            GlobalText(
-              text: label,
-              fontSize: 11,
-              color: AppColors.textMuted,
-            ),
+            GlobalText(text: label, fontSize: 11, color: AppColors.textMuted),
           ],
         ),
       ),
@@ -381,9 +362,7 @@ class _ReviewsList extends StatelessWidget {
         if (state.status.isLoading || state.status.isInitial) {
           return const Padding(
             padding: EdgeInsets.symmetric(vertical: 24),
-            child: Center(
-              child: AdolatLoader(),
-            ),
+            child: Center(child: AdolatLoader()),
           );
         }
         return Column(
@@ -397,66 +376,6 @@ class _ReviewsList extends StatelessWidget {
               .toList(),
         );
       },
-    );
-  }
-}
-
-class _BottomBar extends StatelessWidget {
-  const _BottomBar({required this.lawyer});
-
-  final Lawyer lawyer;
-
-  @override
-  Widget build(BuildContext context) {
-    final bottomPad = MediaQuery.paddingOf(context).bottom;
-
-    return Positioned(
-      left: 0,
-      right: 0,
-      bottom: 0,
-      child: Container(
-        padding: EdgeInsets.fromLTRB(16, 14, 16, bottomPad + 14),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-          border: const Border(top: BorderSide(color: AppColors.divider)),
-        ),
-        child: Material(
-          color: AppColors.navy,
-          borderRadius: BorderRadius.circular(15),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(15),
-            onTap: () => context.push(
-              AppRouteNames.checkout,
-              extra: lawyer,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Center(
-                child: Text.rich(
-                  TextSpan(
-                    text: 'Konsultatsiyani boshlash',
-                    style: AppTextStyles.sans(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.white,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: ' · ${Formatters.soum(lawyer.pricePerSession)}',
-                        style: AppTextStyles.sans(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.gold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
