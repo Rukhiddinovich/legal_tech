@@ -6,6 +6,7 @@ import '../../../../core/widgets/adolat_loader.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/view_status.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/widgets/global_app_bar.dart';
 import '../../../../core/widgets/global_text.dart';
 import '../../../../core/widgets/global_text_field.dart';
 import '../../../../core/widgets/gradient_avatar.dart';
@@ -73,11 +74,91 @@ class _ConsultationViewState extends State<_ConsultationView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldAlt,
+      appBar: GlobalAppBar(
+        backgroundColor: AppColors.navy,
+        elevation: 0,
+        centerTitle: false,
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          behavior: HitTestBehavior.opaque,
+          child: const UnconstrainedBox(
+            child: Padding(
+              padding: EdgeInsets.only(left: 12),
+              child: Icon(
+                CupertinoIcons.back,
+                size: 18,
+                color: AppColors.white,
+              ),
+            ),
+          ),
+        ),
+        title: Row(
+          children: [
+            GradientAvatar(
+              name: widget.lawyer.fullName,
+              size: 40,
+              online: widget.lawyer.isOnline,
+              borderColor: AppColors.navy,
+              fontSize: 13,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GlobalText(
+                    text: widget.lawyer.fullName,
+                    maxLines: 1,
+                    isEllipsis: true,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.white,
+                  ),
+                  GlobalText(
+                    text: widget.lawyer.isOnline ? 'onlayn' : 'oflayn',
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: widget.lawyer.isOnline
+                        ? AppColors.online
+                        : AppColors.textHint,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actionWidget: const Padding(
+          padding: EdgeInsets.only(right: 16),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _HeaderCircle(
+                icon: CupertinoIcons.phone,
+                background: Color(0x1FFFFFFF),
+                iconColor: AppColors.white,
+              ),
+              SizedBox(width: 8),
+              _HeaderCircle(
+                icon: CupertinoIcons.video_camera,
+                background: Color(0xE6FFD700), // Approximate for gold 0.9
+                iconColor: AppColors.navyText,
+              ),
+            ],
+          ),
+        ),
+        bottomWidgets: const PreferredSize(
+          preferredSize: Size.fromHeight(60),
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16, 0, 16, 14),
+            child: _TimerBar(),
+          ),
+        ),
+      ),
       body: Stack(
         children: [
           Column(
             children: [
-              _ChatHeader(lawyer: widget.lawyer),
               Expanded(
                 child: BlocConsumer<ConsultationBloc, ConsultationState>(
                   listenWhen: (p, c) => p.messages.length != c.messages.length,
@@ -123,85 +204,6 @@ class _ConsultationViewState extends State<_ConsultationView> {
   }
 }
 
-class _ChatHeader extends StatelessWidget {
-  const _ChatHeader({required this.lawyer});
-
-  final Lawyer lawyer;
-
-  @override
-  Widget build(BuildContext context) {
-    final topPad = MediaQuery.paddingOf(context).top;
-
-    return Container(
-      padding: EdgeInsets.fromLTRB(16, topPad + 10, 16, 14),
-      color: AppColors.navy,
-      child: Column(
-        children: [
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                behavior: HitTestBehavior.opaque,
-                child: const Padding(
-                  padding: EdgeInsets.only(right: 12),
-                  child: Icon(
-                    CupertinoIcons.back,
-                    size: 18,
-                    color: AppColors.white,
-                  ),
-                ),
-              ),
-              GradientAvatar(
-                name: lawyer.fullName,
-                size: 40,
-                online: lawyer.isOnline,
-                borderColor: AppColors.navy,
-                fontSize: 13,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GlobalText(
-                      text: lawyer.fullName,
-                      maxLines: 1,
-                      isEllipsis: true,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.white,
-                    ),
-                    GlobalText(
-                      text: lawyer.isOnline ? 'onlayn' : 'oflayn',
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: lawyer.isOnline
-                          ? AppColors.online
-                          : AppColors.textHint,
-                    ),
-                  ],
-                ),
-              ),
-              _HeaderCircle(
-                icon: CupertinoIcons.phone,
-                background: AppColors.white.withValues(alpha: 0.12),
-                iconColor: AppColors.white,
-              ),
-              const SizedBox(width: 8),
-              _HeaderCircle(
-                icon: CupertinoIcons.video_camera,
-                background: AppColors.gold.withValues(alpha: 0.9),
-                iconColor: AppColors.navyText,
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          const _TimerBar(),
-        ],
-      ),
-    );
-  }
-}
 
 class _HeaderCircle extends StatelessWidget {
   const _HeaderCircle({

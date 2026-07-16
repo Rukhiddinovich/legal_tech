@@ -168,6 +168,7 @@ class _DocumentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final onSurface = Theme.of(context).colorScheme.onSurface;
     return AppCard(
       padding: const EdgeInsets.all(14),
@@ -205,7 +206,7 @@ class _DocumentTile extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(CupertinoIcons.arrow_down_to_line, color: AppColors.navy, size: 20),
+          Icon(CupertinoIcons.arrow_down_to_line, color: isDark ? AppColors.white : AppColors.navy, size: 20),
         ],
       ),
     );

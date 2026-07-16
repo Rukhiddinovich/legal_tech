@@ -10,6 +10,7 @@ import '../../../../core/router/app_route_names.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/app_card.dart';
+import '../../../../core/widgets/global_app_bar.dart';
 import '../../../../core/widgets/global_button.dart';
 import '../../../../core/widgets/global_text.dart';
 import '../../../../core/widgets/gradient_avatar.dart';
@@ -62,9 +63,18 @@ class _CheckoutView extends StatelessWidget {
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: GlobalAppBar(
+          backgroundColor: Theme.of(context).cardColor,
+          elevation: 0,
+          title: GlobalText(
+            text: 'To\'lov',
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
         body: Column(
           children: [
-            _TopBar(title: 'To\'lov'),
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -93,62 +103,7 @@ class _CheckoutView extends StatelessWidget {
   }
 }
 
-class _TopBar extends StatelessWidget {
-  const _TopBar({required this.title});
 
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final topPad = MediaQuery.paddingOf(context).top;
-    return Container(
-      padding: EdgeInsets.fromLTRB(AppSpacing.xl, topPad + 14, AppSpacing.xl, 16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        border: const Border(bottom: BorderSide(color: AppColors.border)),
-      ),
-      child: Row(
-        children: [
-          _BackCircle(onTap: () => Navigator.pop(context)),
-          const SizedBox(width: 14),
-          GlobalText(
-            text: title,
-            fontSize: 17,
-            fontWeight: FontWeight.w700,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _BackCircle extends StatelessWidget {
-  const _BackCircle({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.chipBg,
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onTap,
-        child: const SizedBox(
-          width: 38,
-          height: 38,
-          child: Icon(
-            CupertinoIcons.back,
-            size: 18,
-            color: AppColors.navyText,
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class _OrderSummaryCard extends StatelessWidget {
   const _OrderSummaryCard({required this.lawyer, required this.order});

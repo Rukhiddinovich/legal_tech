@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/router/app_route_names.dart';
 import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/global_text.dart';
 import '../../../../core/widgets/gradient_avatar.dart';
@@ -52,7 +54,13 @@ class ProfilePage extends StatelessWidget {
               title: 'Boshqa',
               items: [
                 _MenuData(Icons.help_outline_rounded, 'Yordam markazi'),
-                _MenuData(Icons.shield_outlined, 'Maxfiylik siyosati'),
+                _MenuData(
+                  Icons.shield_outlined, 
+                  'Maxfiylik siyosati',
+                  onTap: () async {
+                   Uri.parse('https://github.com/SizningUzeringiz/legal_tech/blob/main/PRIVACY_POLICY.md');
+                  },
+                ),
                 _MenuData(Icons.logout_rounded, 'Chiqish', danger: true),
               ],
             ),
@@ -108,16 +116,19 @@ class _ProfileHeader extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            width: 36,
-            height: 36,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: AppColors.white.withValues(alpha: 0.12),
-              shape: BoxShape.circle,
+          GestureDetector(
+            onTap: () => context.push(AppRouteNames.profileEdit),
+            child: Container(
+              width: 36,
+              height: 36,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: AppColors.white.withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.edit_outlined,
+                  size: 16, color: AppColors.white),
             ),
-            child: const Icon(Icons.edit_outlined,
-                size: 16, color: AppColors.white),
           ),
         ],
       ),
@@ -126,11 +137,12 @@ class _ProfileHeader extends StatelessWidget {
 }
 
 class _MenuData {
-  const _MenuData(this.icon, this.label, {this.danger = false});
+  const _MenuData(this.icon, this.label, {this.danger = false, this.onTap});
 
   final IconData icon;
   final String label;
   final bool danger;
+  final VoidCallback? onTap;
 }
 
 class _MenuSection extends StatelessWidget {
@@ -185,7 +197,7 @@ class _MenuTile extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {},
+        onTap: data.onTap ?? () {},
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           child: Row(

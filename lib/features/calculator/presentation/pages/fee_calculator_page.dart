@@ -4,11 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/utils/thousands_input_formatter.dart';
+import '../../../../core/widgets/global_app_bar.dart';
 import '../../../../core/widgets/global_button.dart';
 import '../../../../core/widgets/global_text.dart';
 import '../../../../core/widgets/global_text_field.dart';
@@ -68,9 +68,18 @@ class _CalculatorViewState extends State<_CalculatorView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: GlobalAppBar(
+        backgroundColor: Theme.of(context).cardColor,
+        elevation: 0,
+        title: GlobalText(
+          text: 'Boj kalkulyatori',
+          fontSize: 17,
+          fontWeight: FontWeight.w700,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+      ),
       body: Column(
         children: [
-          _Header(),
           Expanded(
             child: ListView(
               physics: const BouncingScrollPhysics(),
@@ -155,48 +164,6 @@ class _CalculatorViewState extends State<_CalculatorView> {
   }
 }
 
-class _Header extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final topPad = MediaQuery.paddingOf(context).top;
-    return Container(
-      padding:
-          EdgeInsets.fromLTRB(AppSpacing.xl, topPad + 14, AppSpacing.xl, 16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        border: const Border(bottom: BorderSide(color: AppColors.border)),
-      ),
-      child: Row(
-        children: [
-          Material(
-            color: AppColors.chipBg,
-            shape: const CircleBorder(),
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: () => Navigator.pop(context),
-              child: const SizedBox(
-                width: 38,
-                height: 38,
-                child: Icon(
-                  CupertinoIcons.back,
-                  size: 18,
-                  color: AppColors.navyText,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 14),
-          GlobalText(
-            text: 'Boj kalkulyatori',
-            fontSize: 17,
-            fontWeight: FontWeight.w700,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class _TypeSelector extends StatelessWidget {
   const _TypeSelector({required this.label, required this.onTap});

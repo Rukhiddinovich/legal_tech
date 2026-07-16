@@ -12,6 +12,7 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/constants/view_status.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/widgets/app_card.dart';
+import '../../../../core/widgets/global_app_bar.dart';
 import '../../../../core/widgets/global_button.dart';
 import '../../../../core/widgets/global_text.dart';
 import '../../../../core/widgets/global_text_field.dart';
@@ -41,11 +42,38 @@ class _GeneratorView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: GlobalAppBar(
+        backgroundColor: Theme.of(context).cardColor,
+        elevation: 0,
+        onBackTap: () {
+          final bloc = context.read<DocumentGeneratorBloc>();
+          if (bloc.state.step == DocumentStep.data) {
+            bloc.add(const DocumentBackRequested());
+          } else {
+            Navigator.pop(context);
+          }
+        },
+        title: GlobalText(
+          text: 'Hujjat generatori',
+          fontSize: 17,
+          fontWeight: FontWeight.w700,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+        bottomWidgets: PreferredSize(
+          preferredSize: const Size.fromHeight(40),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(AppSpacing.xl, 0, AppSpacing.xl, 16),
+            child: BlocBuilder<DocumentGeneratorBloc, DocumentGeneratorState>(
+              buildWhen: (p, c) => p.step != c.step,
+              builder: (context, state) => StepIndicator(current: state.step),
+            ),
+          ),
+        ),
+      ),
       body: Stack(
         children: [
           Column(
             children: [
-              const _Header(),
               Expanded(
                 child: BlocBuilder<DocumentGeneratorBloc,
                     DocumentGeneratorState>(
@@ -79,80 +107,8 @@ class _GeneratorView extends StatelessWidget {
   }
 }
 
-class _Header extends StatelessWidget {
-  const _Header();
 
-  @override
-  Widget build(BuildContext context) {
-    final topPad = MediaQuery.paddingOf(context).top;
-    return Container(
-      padding: EdgeInsets.fromLTRB(AppSpacing.xl, topPad + 14, AppSpacing.xl, 16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        border: const Border(bottom: BorderSide(color: AppColors.border)),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              _BackCircle(
-                onTap: () {
-                  final bloc = context.read<DocumentGeneratorBloc>();
-                  if (bloc.state.step == DocumentStep.data) {
-                    bloc.add(const DocumentBackRequested());
-                  } else {
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-              const SizedBox(width: 14),
-              GlobalText(
-                text: 'Hujjat generatori',
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          BlocBuilder<DocumentGeneratorBloc, DocumentGeneratorState>(
-            buildWhen: (p, c) => p.step != c.step,
-            builder: (context, state) => StepIndicator(current: state.step),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
-class _BackCircle extends StatelessWidget {
-  const _BackCircle({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.chipBg,
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onTap,
-        child: const SizedBox(
-          width: 38,
-          height: 38,
-          child: Icon(
-            CupertinoIcons.back,
-            size: 18,
-            color: AppColors.navyText,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ── STEP 1: Turi ─────────────────────────────────────────────────
 class _TypeStep extends StatelessWidget {
   const _TypeStep({required this.templates});
 
@@ -160,6 +116,7 @@ class _TypeStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return ListView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 18, 16, 130),
@@ -180,12 +137,12 @@ class _TypeStep extends StatelessWidget {
                     height: 42,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColors.goldSoft,
+                      color: isDark ? AppColors.gold.withValues(alpha: 0.15) : AppColors.goldSoft,
                       borderRadius: BorderRadius.circular(11),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       CupertinoIcons.doc,
-                      color: AppColors.goldDark,
+                      color: isDark ? AppColors.gold : AppColors.goldDark,
                       size: 20,
                     ),
                   ),
@@ -391,7 +348,6 @@ class _Field extends StatelessWidget {
         GlobalTextField(
           hintText: field.hint,
           onChanged: (val) {
-            // Agar amount bo'lsa probellarsiz haqiqiy qiymatni bloc'ga yuboramiz
             if (isNumber) {
               final digits = val.replaceAll(RegExp(r'[^0-9]'), '');
               onChanged(digits);
@@ -506,6 +462,7 @@ class _DoneStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return ListView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(24, 40, 24, 130),
@@ -582,7 +539,7 @@ class _DoneStep extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(CupertinoIcons.arrow_down_to_line, color: AppColors.navy),
+              Icon(CupertinoIcons.arrow_down_to_line, color: isDark ? AppColors.white : AppColors.navy),
             ],
           ),
         ),
@@ -591,14 +548,11 @@ class _DoneStep extends StatelessWidget {
   }
 }
 
-// ── Pastki panel ─────────────────────────────────────────────────
 class _BottomBar extends StatelessWidget {
   const _BottomBar();
 
   @override
   Widget build(BuildContext context) {
-    final bottomPad = MediaQuery.paddingOf(context).bottom;
-
     return BlocBuilder<DocumentGeneratorBloc, DocumentGeneratorState>(
       buildWhen: (p, c) =>
           p.step != c.step ||

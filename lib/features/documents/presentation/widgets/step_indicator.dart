@@ -19,6 +19,7 @@ class StepIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     const labels = ['Turi', 'Ma\'lumotlar', 'Tayyor'];
     return Row(
       children: [
@@ -27,11 +28,13 @@ class StepIndicator extends StatelessWidget {
           if (i < labels.length - 1)
             Expanded(
               child: Container(
-                height: 1.5,
+                height: 2.0,
                 margin: const EdgeInsets.symmetric(horizontal: 6),
                 color: i < _index
-                    ? AppColors.navy
-                    : AppColors.navy.withValues(alpha: 0.15),
+                    ? (isDark ? AppColors.white : AppColors.navy)
+                    : (isDark
+                        ? AppColors.white.withValues(alpha: 0.15)
+                        : AppColors.navy.withValues(alpha: 0.15)),
               ),
             ),
         ],
@@ -53,6 +56,7 @@ class _StepDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final done = index < current;
     final active = index == current;
 
@@ -62,10 +66,10 @@ class _StepDot extends StatelessWidget {
       circleColor = AppColors.online;
       textColor = AppColors.online;
     } else if (active) {
-      circleColor = AppColors.navy;
-      textColor = AppColors.navy;
+      circleColor = isDark ? AppColors.white : AppColors.navy;
+      textColor = isDark ? AppColors.white : AppColors.navy;
     } else {
-      circleColor = const Color(0xFFE4E0D7);
+      circleColor = isDark ? AppColors.white.withValues(alpha: 0.1) : const Color(0xFFE4E0D7);
       textColor = AppColors.textHint;
     }
 
@@ -73,23 +77,23 @@ class _StepDot extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 22,
-          height: 22,
+          width: 24,
+          height: 24,
           alignment: Alignment.center,
           decoration: BoxDecoration(color: circleColor, shape: BoxShape.circle),
           child: done
-              ? const Icon(CupertinoIcons.checkmark, size: 12, color: AppColors.white)
+              ? const Icon(CupertinoIcons.checkmark, size: 14, color: AppColors.white)
               : GlobalText(
                   text: '${index + 1}',
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: active ? AppColors.white : AppColors.textHint,
+                  color: active ? (isDark ? AppColors.navy : AppColors.white) : AppColors.textHint,
                 ),
         ),
-        const SizedBox(width: 7),
+        const SizedBox(width: 8),
         GlobalText(
           text: label,
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: active || done ? FontWeight.w700 : FontWeight.w600,
           color: textColor,
         ),

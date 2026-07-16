@@ -10,6 +10,7 @@ import '../../features/documents/presentation/pages/document_generator_page.dart
 import '../../features/lawyers/domain/entities/lawyer.dart';
 import '../../features/lawyers/presentation/pages/lawyer_profile_page.dart';
 import '../../features/payment/presentation/pages/checkout_page.dart';
+import '../../features/profile/presentation/pages/profile_edit_page.dart';
 import '../../features/tab_shell/presentation/pages/tab_box.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/widgets/global_text.dart';
@@ -71,6 +72,11 @@ class AppRouter {
         path: AppRouteNames.feeCalculator,
         name: AppRouteNames.feeCalculator,
         builder: (context, state) => const FeeCalculatorPage(),
+      ),
+      GoRoute(
+        path: AppRouteNames.profileEdit,
+        name: AppRouteNames.profileEdit,
+        builder: (context, state) => const ProfileEditPage(),
       ),
     ],
   );

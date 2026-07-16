@@ -30,7 +30,7 @@ Future<void> main() async {
       supportedLocales: const [Locale('uz', 'UZ'), Locale('ru', 'RU')],
       path: 'assets/translations',
       fallbackLocale: const Locale('uz', 'UZ'),
-      child: const AdolatApp(),
+      child: const Application(),
     ),
   );
 }

@@ -220,8 +220,11 @@ class _TransactionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final onSurface = Theme.of(context).colorScheme.onSurface;
     final credit = transaction.isCredit;
+
+    final Color debitColor = isDark ? AppColors.white : AppColors.navy;
 
     return AppCard(
       padding: const EdgeInsets.all(14),
@@ -232,14 +235,14 @@ class _TransactionTile extends StatelessWidget {
             height: 40,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: (credit ? AppColors.online : AppColors.navy)
+              color: (credit ? AppColors.online : debitColor)
                   .withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(11),
             ),
             child: Icon(
               credit ? CupertinoIcons.arrow_down_left : CupertinoIcons.arrow_up_right,
               size: 18,
-              color: credit ? AppColors.online : AppColors.navy,
+              color: credit ? AppColors.online : debitColor,
             ),
           ),
           const SizedBox(width: 12),

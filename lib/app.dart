@@ -8,8 +8,8 @@ import 'core/theme/app_theme.dart';
 import 'features/theme/presentation/bloc/theme_bloc.dart';
 
 /// Ilovaning ildiz (root) vidjeti.
-class AdolatApp extends StatelessWidget {
-  const AdolatApp({super.key});
+class Application extends StatelessWidget {
+  const Application({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -66,5 +66,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Ilovaga profilingiz uchun rasm yuklash maqsadida galereyaga kirish huquqi kerak.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Ilovaga profilingiz uchun rasm rasmga olish maqsadida kameraga kirish huquqi kerak.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Ilovaga video yozib olish maqsadida mikrofonga kirish huquqi kerak.</string>
 </dict>
 </plist>

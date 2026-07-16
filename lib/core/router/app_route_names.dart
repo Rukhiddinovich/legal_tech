@@ -9,4 +9,5 @@ class AppRouteNames {
   static const String consultation = '/consultation';
   static const String documentGenerator = '/document-generator';
   static const String feeCalculator = '/fee-calculator';
+  static const String profileEdit = '/profile-edit';
 }
