@@ -9,6 +9,9 @@ import '../../features/consultation/presentation/pages/consultation_page.dart';
 import '../../features/documents/presentation/pages/document_generator_page.dart';
 import '../../features/lawyers/domain/entities/lawyer.dart';
 import '../../features/lawyers/presentation/pages/lawyer_profile_page.dart';
+import '../../features/lawyers/presentation/pages/lawyers_by_area_page.dart';
+import '../../features/lawyers/presentation/pages/saved_lawyers_page.dart';
+import '../../features/law_areas/domain/entities/law_area.dart';
 import '../../features/payment/presentation/pages/checkout_page.dart';
 import '../../features/profile/presentation/pages/profile_edit_page.dart';
 import '../../features/tab_shell/presentation/pages/tab_box.dart';
@@ -77,6 +80,20 @@ class AppRouter {
         path: AppRouteNames.profileEdit,
         name: AppRouteNames.profileEdit,
         builder: (context, state) => const ProfileEditPage(),
+      ),
+      GoRoute(
+        path: AppRouteNames.lawyersByArea,
+        name: AppRouteNames.lawyersByArea,
+        builder: (context, state) {
+          final area = state.extra;
+          if (area is! LawArea) return _buildUnknownRoutePage('Invalid LawArea argument');
+          return LawyersByAreaPage(area: area);
+        },
+      ),
+      GoRoute(
+        path: AppRouteNames.savedLawyers,
+        name: AppRouteNames.savedLawyers,
+        builder: (context, state) => const SavedLawyersPage(),
       ),
     ],
   );

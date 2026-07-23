@@ -21,13 +21,3 @@ class CatalogSearchChanged extends CatalogEvent {
   @override
   List<Object?> get props => [query];
 }
-
-/// Huquq sohasi tanlandi (yoki bekor qilindi).
-class CatalogAreaSelected extends CatalogEvent {
-  const CatalogAreaSelected(this.areaId);
-
-  final String areaId;
-
-  @override
-  List<Object?> get props => [areaId];
-}

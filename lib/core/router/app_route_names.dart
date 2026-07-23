@@ -10,4 +10,6 @@ class AppRouteNames {
   static const String documentGenerator = '/document-generator';
   static const String feeCalculator = '/fee-calculator';
   static const String profileEdit = '/profile-edit';
+  static const String lawyersByArea = '/lawyers-by-area';
+  static const String savedLawyers = '/saved-lawyers';
 }

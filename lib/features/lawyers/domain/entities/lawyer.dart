@@ -50,4 +50,42 @@ class Lawyer extends Equatable {
 
   @override
   List<Object?> get props => [id];
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'fullName': fullName,
+      'specialization': specialization,
+      'experienceYears': experienceYears,
+      'rating': rating,
+      'reviewsCount': reviewsCount,
+      'consultationsCount': consultationsCount,
+      'pricePerSession': pricePerSession,
+      'sessionMinutes': sessionMinutes,
+      'isOnline': isOnline,
+      'tags': tags,
+      'directions': directions,
+      'about': about,
+      'areaIds': areaIds,
+    };
+  }
+
+  factory Lawyer.fromMap(Map<String, dynamic> map) {
+    return Lawyer(
+      id: map['id'] ?? '',
+      fullName: map['fullName'] ?? '',
+      specialization: map['specialization'] ?? '',
+      experienceYears: map['experienceYears']?.toInt() ?? 0,
+      rating: map['rating']?.toDouble() ?? 0.0,
+      reviewsCount: map['reviewsCount']?.toInt() ?? 0,
+      consultationsCount: map['consultationsCount']?.toInt() ?? 0,
+      pricePerSession: map['pricePerSession']?.toInt() ?? 0,
+      sessionMinutes: map['sessionMinutes']?.toInt() ?? 0,
+      isOnline: map['isOnline'] ?? false,
+      tags: List<String>.from(map['tags'] ?? []),
+      directions: List<String>.from(map['directions'] ?? []),
+      about: map['about'] ?? '',
+      areaIds: List<String>.from(map['areaIds'] ?? []),
+    );
+  }
 }

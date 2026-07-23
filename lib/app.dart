@@ -6,6 +6,7 @@ import 'core/di/injection_container.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/theme/presentation/bloc/theme_bloc.dart';
+import 'features/lawyers/presentation/bloc/saved_lawyers_bloc.dart';
 
 /// Ilovaning ildiz (root) vidjeti.
 class Application extends StatelessWidget {
@@ -13,8 +14,11 @@ class Application extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ThemeBloc>(
-      create: (_) => sl<ThemeBloc>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ThemeBloc>(create: (_) => sl<ThemeBloc>()),
+        BlocProvider<SavedLawyersBloc>(create: (_) => sl<SavedLawyersBloc>()),
+      ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (context, themeMode) {
           return MaterialApp.router(

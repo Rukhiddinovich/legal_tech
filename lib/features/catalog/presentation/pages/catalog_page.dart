@@ -11,7 +11,6 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/router/app_route_names.dart';
 import '../../../../core/widgets/global_text.dart';
 import '../../../../core/widgets/global_text_field.dart';
-import '../../../../core/widgets/gradient_avatar.dart';
 import '../../../../core/widgets/online_dot.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../bloc/catalog_bloc.dart';
@@ -120,10 +119,8 @@ class CatalogPage extends StatelessWidget {
       children: state.areas
           .map((area) => LawAreaTile(
                 area: area,
-                selected: state.selectedAreaId == area.id,
-                onTap: () => context
-                    .read<CatalogBloc>()
-                    .add(CatalogAreaSelected(area.id)),
+                selected: false,
+                onTap: () => context.push(AppRouteNames.lawyersByArea, extra: area),
               ))
           .toList(),
     );
@@ -314,10 +311,21 @@ class _HeaderDelegate extends SliverPersistentHeaderDelegate {
                             ],
                           ),
                         ),
-                        GradientAvatar(
-                          name: userName,
-                          size: 44,
-                          borderColor: AppColors.navy,
+                        Material(
+                          color: Colors.white.withValues(alpha: 0.1),
+                          shape: const CircleBorder(),
+                          child: InkWell(
+                            onTap: () => context.push(AppRouteNames.savedLawyers),
+                            customBorder: const CircleBorder(),
+                            child: const Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: Icon(
+                                CupertinoIcons.bookmark,
+                                color: AppColors.white,
+                                size: 22,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),

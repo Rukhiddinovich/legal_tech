@@ -27,6 +27,8 @@ import '../../features/lawyers/domain/usecases/get_lawyer_reviews.dart';
 import '../../features/lawyers/domain/usecases/get_lawyers.dart';
 import '../../features/lawyers/domain/usecases/search_lawyers.dart';
 import '../../features/lawyers/presentation/bloc/lawyer_profile_bloc.dart';
+import '../../features/lawyers/presentation/bloc/lawyers_by_area_bloc.dart';
+import '../../features/lawyers/presentation/bloc/saved_lawyers_bloc.dart';
 // Theme
 import '../../features/theme/data/repositories/theme_repository_impl.dart';
 import '../../features/theme/domain/repositories/theme_repository.dart';
@@ -68,6 +70,8 @@ void _initLawyers() {
   sl.registerLazySingleton(() => SearchLawyers(sl()));
   sl.registerLazySingleton(() => GetLawyerReviews(sl()));
   sl.registerFactory<LawyerProfileBloc>(() => LawyerProfileBloc(sl()));
+  sl.registerFactory<LawyersByAreaBloc>(() => LawyersByAreaBloc(searchLawyers: sl()));
+  sl.registerLazySingleton<SavedLawyersBloc>(() => SavedLawyersBloc());
 }
 
 void _initLawAreas() {

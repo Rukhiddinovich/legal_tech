@@ -22,7 +22,6 @@ class CatalogBloc extends Bloc<CatalogEvent, CatalogState> {
         super(const CatalogState()) {
     on<CatalogStarted>(_onStarted);
     on<CatalogSearchChanged>(_onSearchChanged);
-    on<CatalogAreaSelected>(_onAreaSelected);
   }
 
   final LawAreaRepository _lawAreaRepository;
@@ -48,22 +47,13 @@ class CatalogBloc extends Bloc<CatalogEvent, CatalogState> {
     await _runSearch(emit);
   }
 
-  Future<void> _onAreaSelected(
-    CatalogAreaSelected event,
-    Emitter<CatalogState> emit,
-  ) async {
-    // Bir xil sohani qayta bosish — filtrni tozalaydi (toggle).
-    final next = state.selectedAreaId == event.areaId ? null : event.areaId;
-    emit(state.copyWith(selectedAreaId: next, clearArea: next == null));
-    await _runSearch(emit);
-  }
 
   Future<void> _runSearch(
     Emitter<CatalogState> emit, {
     List<LawArea>? areas,
   }) async {
     final result = await _searchLawyers(
-      SearchLawyersParams(query: state.query, areaId: state.selectedAreaId),
+      SearchLawyersParams(query: state.query),
     );
 
     result.fold(

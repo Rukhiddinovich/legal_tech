@@ -12,6 +12,7 @@ Future<void> main() async {
 
   await Hive.initFlutter();
   await Hive.openBox('settings');
+  await Hive.openBox('saved_lawyers');
 
   // Bog'liqliklarni ishga tushirish (get_it).
   await initDependencies();

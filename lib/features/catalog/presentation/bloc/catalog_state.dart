@@ -6,7 +6,6 @@ class CatalogState extends Equatable {
     this.areas = const [],
     this.lawyers = const [],
     this.query = '',
-    this.selectedAreaId,
     this.error,
   });
 
@@ -14,7 +13,6 @@ class CatalogState extends Equatable {
   final List<LawArea> areas;
   final List<Lawyer> lawyers;
   final String query;
-  final String? selectedAreaId;
   final String? error;
 
   /// Onlayn advokatlar soni (dizayndagi "12 ta faol" belgisi uchun).
@@ -25,8 +23,6 @@ class CatalogState extends Equatable {
     List<LawArea>? areas,
     List<Lawyer>? lawyers,
     String? query,
-    String? selectedAreaId,
-    bool clearArea = false,
     String? error,
   }) {
     return CatalogState(
@@ -34,7 +30,6 @@ class CatalogState extends Equatable {
       areas: areas ?? this.areas,
       lawyers: lawyers ?? this.lawyers,
       query: query ?? this.query,
-      selectedAreaId: clearArea ? null : (selectedAreaId ?? this.selectedAreaId),
       error: error,
     );
   }
@@ -45,7 +40,6 @@ class CatalogState extends Equatable {
         areas,
         lawyers,
         query,
-        selectedAreaId,
         error,
       ];
 }

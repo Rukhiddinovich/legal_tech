@@ -18,6 +18,7 @@ import '../../../../core/widgets/global_text.dart';
 import '../../../../core/widgets/gradient_avatar.dart';
 import '../../domain/entities/lawyer.dart';
 import '../bloc/lawyer_profile_bloc.dart';
+import '../bloc/saved_lawyers_bloc.dart';
 import '../widgets/review_card.dart';
 
 /// 02 — Advokat profili.
@@ -48,7 +49,17 @@ class _ProfileView extends StatelessWidget {
       appBar: GlobalAppBar(
         actionWidget: Padding(
           padding: const EdgeInsets.only(right: 20),
-          child: _RoundHeaderButton(icon: CupertinoIcons.heart, onTap: () {}),
+          child: BlocBuilder<SavedLawyersBloc, SavedLawyersState>(
+            builder: (context, state) {
+              final isSaved = state.isSaved(lawyer.id);
+              return _RoundHeaderButton(
+                icon: isSaved ? CupertinoIcons.bookmark_fill : CupertinoIcons.bookmark,
+                onTap: () {
+                  context.read<SavedLawyersBloc>().add(ToggleSavedLawyer(lawyer));
+                },
+              );
+            },
+          ),
         ),
         backgroundColor: AppColors.navy,
       ),
