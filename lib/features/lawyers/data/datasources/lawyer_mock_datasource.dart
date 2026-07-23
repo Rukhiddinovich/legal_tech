@@ -139,7 +139,7 @@ class LawyerMockDataSource implements LawyerDataSource {
       'about':
           'Ko\'chmas mulk bitimlari va nizolari bo\'yicha huquqiy yordam. '
               'Oldi-sotdi shartnomalarini yuridik jihatdan xavfsiz rasmiylashtiradi.',
-      'area_ids': ['realestate'],
+      'area_ids': ['business'],
     },
   ];
 

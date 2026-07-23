@@ -61,22 +61,22 @@ class _ProfileView extends StatelessWidget {
               children: [
                 _ProfileCard(lawyer: lawyer),
                 const SizedBox(height: 20),
-                _label('Yo\'nalishlar'),
+                _label(context, 'Yo\'nalishlar'),
                 const SizedBox(height: 10),
                 _DirectionChips(directions: lawyer.directions),
                 const SizedBox(height: 18),
                 _PriceCard(lawyer: lawyer),
                 const SizedBox(height: 20),
-                _label('Advokat haqida'),
+                _label(context, 'Advokat haqida'),
                 const SizedBox(height: 8),
                 GlobalText(
                   text: lawyer.about,
                   fontSize: 13,
-                  color: AppColors.textSecondary,
+                  color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.textSecondary,
                   height: 1.6,
                 ),
                 const SizedBox(height: 22),
-                _label('Sharhlar (${lawyer.reviewsCount})'),
+                _label(context, 'Sharhlar (${lawyer.reviewsCount})'),
                 const SizedBox(height: 10),
                 const _ReviewsList(),
               ],
@@ -84,16 +84,16 @@ class _ProfileView extends StatelessWidget {
           ),
           GlobalButton(
             onTap: () => context.push(AppRouteNames.checkout, extra: lawyer),
-            padding: EdgeInsets.only(left: 16, right: 16,bottom: 30),
+            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 30),
             title: "Konsultatsiyani boshlash",
-            color: AppColors.navy,
-            textColor: AppColors.white,
+            color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextPrimary : AppColors.navy,
+            textColor: Theme.of(context).brightness == Brightness.dark ? AppColors.black : AppColors.white,
             rightIcon:  Text(
                ' · ${Formatters.soum(lawyer.pricePerSession)}',
               style: AppTextStyles.sans(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
-                color: AppColors.gold,
+                color: Theme.of(context).brightness == Brightness.dark ? AppColors.navyText : AppColors.gold,
               ),
             ),
           ),
@@ -102,15 +102,18 @@ class _ProfileView extends StatelessWidget {
     );
   }
 
-  Widget _label(String text) => Padding(
-    padding: const EdgeInsets.only(left: 4),
-    child: GlobalText(
-      text: text,
-      fontSize: 13,
-      fontWeight: FontWeight.w700,
-      color: AppColors.textPrimary,
-    ),
-  );
+  Widget _label(BuildContext context, String text) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Padding(
+      padding: const EdgeInsets.only(left: 4),
+      child: GlobalText(
+        text: text,
+        fontSize: 13,
+        fontWeight: FontWeight.w700,
+        color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
+      ),
+    );
+  }
 }
 
 class _RoundHeaderButton extends StatelessWidget {
@@ -168,7 +171,7 @@ class _ProfileCard extends StatelessWidget {
                 text: lawyer.specialization,
                 textAlign: TextAlign.center,
                 fontSize: 13,
-                color: AppColors.textMuted,
+                color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.textMuted,
               ),
               if (lawyer.isOnline) ...[
                 const SizedBox(height: 10),
@@ -240,7 +243,11 @@ class _StatCell extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurface,
             ),
             const SizedBox(height: 2),
-            GlobalText(text: label, fontSize: 11, color: AppColors.textMuted),
+            GlobalText(
+              text: label, 
+              fontSize: 11, 
+              color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.textMuted,
+            ),
           ],
         ),
       ),
@@ -271,7 +278,7 @@ class _DirectionChips extends StatelessWidget {
                 text: d,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textSecondary,
+                color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.textSecondary,
               ),
             ),
           )
@@ -287,11 +294,13 @@ class _PriceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(17),
       decoration: BoxDecoration(
-        color: AppColors.navy,
+        color: isDark ? Theme.of(context).cardColor : AppColors.navy,
         borderRadius: BorderRadius.circular(AppRadius.xl),
+        border: isDark ? Border.all(color: AppColors.darkBorder) : null,
       ),
       child: Row(
         children: [
@@ -303,7 +312,7 @@ class _PriceCard extends StatelessWidget {
                   text: 'Tezkor konsultatsiya',
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.white.withValues(alpha: 0.55),
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.white.withValues(alpha: 0.55),
                 ),
                 const SizedBox(height: 3),
                 Text.rich(
@@ -312,7 +321,7 @@ class _PriceCard extends StatelessWidget {
                     style: AppTextStyles.sans(
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.white,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.white,
                     ),
                     children: [
                       TextSpan(
@@ -320,7 +329,7 @@ class _PriceCard extends StatelessWidget {
                         style: AppTextStyles.sans(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.white.withValues(alpha: 0.6),
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.white.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -342,7 +351,7 @@ class _PriceCard extends StatelessWidget {
               GlobalText(
                 text: 'Chat · Audio · Video',
                 fontSize: 11,
-                color: AppColors.white.withValues(alpha: 0.5),
+                color: isDark ? AppColors.darkTextSecondary : AppColors.white.withValues(alpha: 0.5),
               ),
             ],
           ),

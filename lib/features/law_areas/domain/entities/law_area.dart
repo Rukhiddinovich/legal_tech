@@ -8,12 +8,14 @@ class LawArea extends Equatable {
     required this.id,
     required this.name,
     required this.abbrev,
+    this.priceText,
   });
 
   final String id;
   final String name;
   final String abbrev;
+  final String? priceText;
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [id, name, abbrev, priceText];
 }

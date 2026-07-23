@@ -15,6 +15,7 @@ class ReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final onSurface = Theme.of(context).colorScheme.onSurface;
 
     return AppCard(
@@ -28,8 +29,8 @@ class ReviewCard extends StatelessWidget {
                 width: 32,
                 height: 32,
                 alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFEDE7DA),
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.darkSurface : const Color(0xFFEDE7DA),
                   shape: BoxShape.circle,
                 ),
                 child: GlobalText(
@@ -59,7 +60,7 @@ class ReviewCard extends StatelessWidget {
           GlobalText(
             text: review.text,
             fontSize: 12.5,
-            color: AppColors.textSecondary,
+            color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
             height: 1.55,
           ),
           if (review.verified) ...[

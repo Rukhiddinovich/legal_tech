@@ -37,11 +37,11 @@ class GlobalAppBar extends StatelessWidget implements PreferredSize {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
         statusBarColor: statusBarColor ?? Colors.transparent,
-        systemNavigationBarColor: Colors.black,
-        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: isDark ? AppColors.darkScaffold : Colors.black,
+        systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         systemNavigationBarDividerColor: Colors.transparent,
       ),
       child: AppBar(
@@ -49,9 +49,9 @@ class GlobalAppBar extends StatelessWidget implements PreferredSize {
         automaticallyImplyLeading: true,
         scrolledUnderElevation: 0,
         toolbarHeight: toolbarHeight ?? 56,
-        iconTheme: IconThemeData(color: AppColors.black),
+        iconTheme: IconThemeData(color: isDark ? AppColors.white : AppColors.black),
         backgroundColor:
-            backgroundColor ?? (isDark ? Colors.white : AppColors.white),
+            backgroundColor ?? (isDark ? AppColors.darkScaffold : AppColors.white),
         elevation: elevation ?? 0,
         leading: leading ??
             (ModalRoute.of(context)?.canPop == true
@@ -85,19 +85,20 @@ class GlobalBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Material(
-      color: AppColors.chipBg,
+      color: isDark ? AppColors.darkSurface : AppColors.chipBg,
       shape: const CircleBorder(),
       child: InkWell(
         customBorder: const CircleBorder(),
         onTap: onTap,
-        child: const SizedBox(
+        child: SizedBox(
           width: 38,
           height: 38,
           child: Icon(
             CupertinoIcons.back,
             size: 18,
-            color: AppColors.navyText,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.navyText,
           ),
         ),
       ),

@@ -113,6 +113,7 @@ class _OrderSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final onSurface = Theme.of(context).colorScheme.onSurface;
     return AppCard(
       child: Column(
@@ -133,7 +134,7 @@ class _OrderSummaryCard extends StatelessWidget {
                       text: lawyer.fullName,
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: onSurface,
+                      color: isDark ? AppColors.darkTextPrimary : onSurface,
                     ),
                     const SizedBox(height: 2),
                     GlobalText(
@@ -141,7 +142,7 @@ class _OrderSummaryCard extends StatelessWidget {
                       maxLines: 1,
                       isEllipsis: true,
                       fontSize: 12,
-                      color: AppColors.textMuted,
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted,
                     ),
                   ],
                 ),
@@ -152,24 +153,25 @@ class _OrderSummaryCard extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 14),
             child: Divider(),
           ),
-          _row('Xizmat turi', order.serviceType),
+          _row(context, 'Xizmat turi', order.serviceType),
           const SizedBox(height: 9),
-          _row('Davomiyligi', order.durationLabel),
+          _row(context, 'Davomiyligi', order.durationLabel),
           const SizedBox(height: 9),
-          _row('Format', order.format),
+          _row(context, 'Format', order.format),
         ],
       ),
     );
   }
 
-  Widget _row(String label, String value) {
+  Widget _row(BuildContext context, String label, String value) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GlobalText(
           text: label,
           fontSize: 13,
-          color: AppColors.textSecondary,
+          color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
         ),
         Flexible(
           child: GlobalText(
@@ -177,7 +179,7 @@ class _OrderSummaryCard extends StatelessWidget {
             textAlign: TextAlign.right,
             fontSize: 13,
             fontWeight: FontWeight.w700,
-            color: AppColors.textPrimary,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.textPrimary,
           ),
         ),
       ],
@@ -227,7 +229,12 @@ class _PaymentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final onSurface = Theme.of(context).colorScheme.onSurface;
+    final borderColor = isDark
+        ? (selected ? AppColors.darkTextPrimary : AppColors.darkBorder)
+        : (selected ? AppColors.navy : AppColors.borderStrong);
+
     return Material(
       color: Theme.of(context).cardColor,
       borderRadius: BorderRadius.circular(14),
@@ -239,7 +246,7 @@ class _PaymentTile extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: selected ? AppColors.navy : AppColors.borderStrong,
+              color: borderColor,
               width: selected ? 1.5 : 1,
             ),
           ),
@@ -277,7 +284,7 @@ class _PaymentTile extends StatelessWidget {
                           style: AppTextStyles.sans(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textMuted,
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted,
                           ),
                         ),
                     ],
@@ -300,14 +307,19 @@ class _RadioDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeColor = isDark ? AppColors.darkTextPrimary : AppColors.navy;
+    final inactiveColor = isDark ? const Color(0xFF4B5563) : const Color(0xFFC7CDD4);
+    final innerColor = isDark ? Theme.of(context).cardColor : AppColors.white;
+
     return Container(
       width: 20,
       height: 20,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: AppColors.white,
+        color: innerColor,
         border: Border.all(
-          color: selected ? AppColors.navy : const Color(0xFFC7CDD4),
+          color: selected ? activeColor : inactiveColor,
           width: selected ? 6 : 1.5,
         ),
       ),
@@ -330,9 +342,10 @@ class _PriceBreakdown extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _line('Xizmat narxi', Formatters.soum(order.price)),
+          _line(context, 'Xizmat narxi', Formatters.soum(order.price)),
           const SizedBox(height: 9),
           _line(
+            context,
             'Xizmat haqi',
             Formatters.soum(order.serviceFee),
             valueColor: AppColors.online,
@@ -363,20 +376,21 @@ class _PriceBreakdown extends StatelessWidget {
     );
   }
 
-  Widget _line(String label, String value, {Color? valueColor}) {
+  Widget _line(BuildContext context, String label, String value, {Color? valueColor}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GlobalText(
           text: label,
           fontSize: 13,
-          color: AppColors.textSecondary,
+          color: isDark ? AppColors.darkTextSecondary : AppColors.textSecondary,
         ),
         GlobalText(
           text: value,
           fontSize: 13,
           fontWeight: FontWeight.w600,
-          color: valueColor ?? AppColors.textPrimary,
+          color: valueColor ?? (isDark ? AppColors.darkTextPrimary : AppColors.textPrimary),
         ),
       ],
     );
@@ -388,6 +402,9 @@ class _EscrowBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final titleColor = isDark ? AppColors.gold : const Color(0xFF5A441C);
+    final subtitleColor = isDark ? const Color(0xFFD4AF60) : const Color(0xFF6B5426);
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -407,7 +424,7 @@ class _EscrowBanner extends StatelessWidget {
                 style: AppTextStyles.sans(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF5A441C),
+                  color: titleColor,
                   height: 1.5,
                 ),
                 children: [
@@ -418,7 +435,7 @@ class _EscrowBanner extends StatelessWidget {
                     style: AppTextStyles.sans(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: const Color(0xFF6B5426),
+                      color: subtitleColor,
                       height: 1.5,
                     ),
                   ),
@@ -439,6 +456,7 @@ class _PayBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocBuilder<PaymentBloc, PaymentState>(
       builder: (context, state) {
         if (state.isProcessing) {
@@ -451,8 +469,8 @@ class _PayBar extends StatelessWidget {
           onTap: () => context.read<PaymentBloc>().add(const PaymentRequested()),
           padding: const EdgeInsets.only(left: 16, right: 16, bottom: 30),
           title: '${Formatters.soum(order.total)} to\'lash',
-          color: AppColors.navy,
-          textColor: AppColors.white,
+          color: isDark ? AppColors.darkTextPrimary : AppColors.navy,
+          textColor: isDark ? AppColors.black : AppColors.white,
         );
       },
     );
@@ -464,16 +482,17 @@ class _ProcessingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
-        color: AppColors.navy,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
+        color: isDark ? AppColors.darkTextPrimary : AppColors.navy,
+        borderRadius: BorderRadius.circular(28),
       ),
-      child: const AdolatLoader(
-        size: 22,
-        color: AppColors.gold,
+      child: AdolatLoader(
+        color: isDark ? AppColors.black : AppColors.white,
+        size: 24,
       ),
     );
   }

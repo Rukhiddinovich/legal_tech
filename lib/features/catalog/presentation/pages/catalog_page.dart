@@ -93,7 +93,7 @@ class CatalogPage extends StatelessWidget {
         crossAxisCount: 3,
         crossAxisSpacing: 11,
         mainAxisSpacing: 11,
-        childAspectRatio: 0.92,
+        childAspectRatio: 0.75,
         children: List.generate(
           6,
           (index) => Shimmer.fromColors(
@@ -116,7 +116,7 @@ class CatalogPage extends StatelessWidget {
       crossAxisCount: 3,
       crossAxisSpacing: 11,
       mainAxisSpacing: 11,
-      childAspectRatio: 0.92,
+      childAspectRatio: 0.75,
       children: state.areas
           .map((area) => LawAreaTile(
                 area: area,
