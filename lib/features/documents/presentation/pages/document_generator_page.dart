@@ -3,9 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/utils/thousands_input_formatter.dart';
-import '../../../../core/utils/passport_input_formatter.dart';
-import '../../../../core/widgets/adolat_loader.dart';
+import 'package:go_router/go_router.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_spacing.dart';
@@ -17,6 +16,9 @@ import '../../../../core/widgets/global_button.dart';
 import '../../../../core/widgets/global_text.dart';
 import '../../../../core/widgets/global_text_field.dart';
 import '../../../../core/widgets/section_header.dart';
+import '../../../../core/widgets/adolat_loader.dart';
+import '../../../../core/utils/thousands_input_formatter.dart';
+import '../../../../core/utils/passport_input_formatter.dart';
 import '../../domain/entities/document_field.dart';
 import '../../domain/entities/document_template.dart';
 import '../bloc/document_generator_bloc.dart';
@@ -107,25 +109,247 @@ class _GeneratorView extends StatelessWidget {
   }
 }
 
-
-
+// ── STEP 1: Hujjat Turlari Ro'yxati (Guruhlangan) ────────────────
 class _TypeStep extends StatelessWidget {
   const _TypeStep({required this.templates});
 
   final List<DocumentTemplate> templates;
 
+  void _showNotarialWarning(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 30),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.borderStrong,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Icon(CupertinoIcons.shield_slash_fill, color: AppColors.danger, size: 48),
+            const SizedBox(height: 14),
+            const GlobalText(
+              text: 'Notarial tasdiq talab etiladi',
+              fontSize: 16.5,
+              fontWeight: FontWeight.w700,
+            ),
+            const SizedBox(height: 8),
+            const GlobalText(
+              text: 'Ushbu ishonchnoma hujjati faqat notarius orqali rasmiylashtirilishi shart. Tizim orqali generatsiya qilib bo\'lmaydi.',
+              fontSize: 13,
+              color: AppColors.textMuted,
+              textAlign: TextAlign.center,
+              height: 1.45,
+            ),
+            const SizedBox(height: 24),
+            GlobalButton(
+              onTap: () {
+                Navigator.pop(ctx);
+                toastification.show(
+                  context: context,
+                  type: ToastificationType.info,
+                  style: ToastificationStyle.fillColored,
+                  title: const Text('Vakolat.uz portaliga yo\'naltirilmoqda...'),
+                  autoCloseDuration: const Duration(seconds: 3),
+                );
+              },
+              title: 'Vakolat.uz tizimiga o\'tish',
+              color: AppColors.navy,
+              textColor: Colors.white,
+            ),
+            const SizedBox(height: 10),
+            GlobalButton(
+              onTap: () => Navigator.pop(ctx),
+              title: 'Orqaga',
+              color: Theme.of(context).cardColor,
+              textColor: Theme.of(context).colorScheme.onSurface,
+              borderColor: AppColors.borderStrong,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showPdfPreview(BuildContext context, String title) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => FractionallySizedBox(
+        heightFactor: 0.85,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 30),
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.borderStrong,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 14),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GlobalText(text: '$title (Namuna)', fontSize: 16, fontWeight: FontWeight.w700),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(ctx),
+                    child: const Icon(CupertinoIcons.xmark_circle_fill, color: AppColors.textMuted),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              // Dummy preview document
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: AppColors.paperBg,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.borderStrong),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: GlobalText(
+                            text: title.toUpperCase(),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.navyText,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        const GlobalText(text: 'Ushbu bo\'limda hujjatning rasmiy namunasi keltirilgan. Hujjat generatsiya qilingandan so\'ng siz kiritgan ma\'lumotlar mos kataklarga to\'ldiriladi.', fontSize: 11, color: Colors.grey),
+                        const SizedBox(height: 20),
+                        _previewLine('1. Tomonlar ma\'lumotlari: F.I.SH., Pasport seriyasi va raqami'),
+                        _previewLine('2. Kelishuv predmeti va shartlari'),
+                        _previewLine('3. Majburiyatlar va nizolarni hal qilish tartibi'),
+                        _previewLine('4. Tomonlarning imzolari va manzillari'),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _previewLine(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GlobalText(text: text, fontSize: 12, fontWeight: FontWeight.w700),
+          const SizedBox(height: 6),
+          Container(height: 6, width: double.infinity, decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(3))),
+          const SizedBox(height: 4),
+          Container(height: 6, width: 200, decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(3))),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    // Grouping
+    final arizalar = templates.where((t) => t.id == 'application').toList();
+    final shartnomalar = templates.where((t) => t.id == 'contract').toList();
+    final davoArizalar = templates.where((t) => t.id == 'claim').toList();
+
     return ListView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 18, 16, 130),
       children: [
-        const SectionHeader(title: 'Hujjat turini tanlang'),
-        const SizedBox(height: 12),
-        ...templates.map(
+        _buildGroup(context, 'Arizalar', arizalar),
+        const SizedBox(height: 14),
+        _buildGroup(context, 'Shartnomalar', shartnomalar),
+        const SizedBox(height: 14),
+        _buildGroup(context, 'Sudga da\'vo arizalari', davoArizalar),
+        const SizedBox(height: 14),
+        
+        // Notarial Hujjatlar Group
+        const SectionHeader(title: 'Notarial hujjatlar'),
+        const SizedBox(height: 10),
+        AppCard(
+          onTap: () => _showNotarialWarning(context),
+          child: Row(
+            children: [
+              Container(
+                width: 42,
+                height: 42,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.danger.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                child: const Icon(CupertinoIcons.shield_slash, color: AppColors.danger, size: 20),
+              ),
+              const SizedBox(width: 13),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GlobalText(
+                      text: 'Ishonchnoma',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    SizedBox(height: 2),
+                    GlobalText(
+                      text: 'Notarial tasdiq talab etiladi',
+                      fontSize: 12,
+                      color: AppColors.textMuted,
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(CupertinoIcons.chevron_right, color: AppColors.textHint, size: 16),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGroup(BuildContext context, String groupTitle, List<DocumentTemplate> items) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(title: groupTitle),
+        const SizedBox(height: 10),
+        ...items.map(
           (t) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: 10),
             child: AppCard(
               onTap: () => context
                   .read<DocumentGeneratorBloc>()
@@ -166,6 +390,11 @@ class _TypeStep extends StatelessWidget {
                       ],
                     ),
                   ),
+                  // Eye Icon for Preview
+                  IconButton(
+                    icon: const Icon(CupertinoIcons.eye, color: AppColors.goldDark, size: 18),
+                    onPressed: () => _showPdfPreview(context, t.title),
+                  ),
                   const Icon(
                     CupertinoIcons.chevron_right,
                     color: AppColors.textHint,
@@ -181,23 +410,30 @@ class _TypeStep extends StatelessWidget {
   }
 }
 
-// ── STEP 2: Ma'lumotlar ──────────────────────────────────────────
-class _DataStep extends StatelessWidget {
+// ── STEP 2: Ma'lumot Kiritish Formasi (✓ Belglari bilan) ─────────
+class _DataStep extends StatefulWidget {
   const _DataStep({required this.template});
 
   final DocumentTemplate template;
 
   @override
+  State<_DataStep> createState() => _DataStepState();
+}
+
+class _DataStepState extends State<_DataStep> {
+  final Map<String, String> _values = {};
+
+  @override
   Widget build(BuildContext context) {
     final bloc = context.read<DocumentGeneratorBloc>();
-    final halfFields = template.fields.where((f) => f.halfWidth).toList();
-    final fullFields = template.fields.where((f) => !f.halfWidth).toList();
+    final halfFields = widget.template.fields.where((f) => f.halfWidth).toList();
+    final fullFields = widget.template.fields.where((f) => !f.halfWidth).toList();
 
     return ListView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 18, 16, 130),
       children: [
-        // Tanlangan hujjat turi
+        // Type Card
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
@@ -214,11 +450,7 @@ class _DataStep extends StatelessWidget {
                   color: AppColors.gold.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(
-                  CupertinoIcons.doc,
-                  color: AppColors.gold,
-                  size: 18,
-                ),
+                child: const Icon(CupertinoIcons.doc, color: AppColors.gold, size: 18),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -226,14 +458,14 @@ class _DataStep extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GlobalText(
-                      text: template.title,
+                      text: widget.template.title,
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       color: AppColors.white,
                     ),
                     const SizedBox(height: 2),
                     GlobalText(
-                      text: template.subtitle,
+                      text: widget.template.subtitle,
                       fontSize: 11,
                       color: AppColors.white.withValues(alpha: 0.55),
                     ),
@@ -242,7 +474,7 @@ class _DataStep extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () => bloc.add(const DocumentBackRequested()),
-                child: GlobalText(
+                child: const GlobalText(
                   text: 'O\'zgartirish',
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
@@ -254,22 +486,20 @@ class _DataStep extends StatelessWidget {
         ),
         const SizedBox(height: 18),
 
-        // To'liq kenglikdagi maydonlar
+        // Full width inputs
         for (final field in fullFields) ...[
-          _Field(
-              field: field,
-              onChanged: (v) => bloc.add(DocumentValueChanged(field.key, v))),
+          _buildField(field),
           const SizedBox(height: 14),
         ],
 
-        // Yarim kenglikdagi maydonlar (juft-juft)
-        if (halfFields.isNotEmpty) _HalfRow(fields: halfFields, bloc: bloc),
+        // Half width inputs
+        if (halfFields.isNotEmpty) _buildHalfRow(halfFields),
 
         const SizedBox(height: 14),
-        Row(
+        const Row(
           children: [
-            const Icon(CupertinoIcons.lock, size: 14, color: AppColors.textMuted),
-            const SizedBox(width: 8),
+            Icon(CupertinoIcons.lock, size: 14, color: AppColors.textMuted),
+            SizedBox(width: 8),
             Expanded(
               child: GlobalText(
                 text: 'Ma\'lumotlaringiz shifrlangan holda saqlanadi',
@@ -279,21 +509,60 @@ class _DataStep extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        _PreviewCard(),
       ],
     );
   }
-}
 
-class _HalfRow extends StatelessWidget {
-  const _HalfRow({required this.fields, required this.bloc});
+  Widget _buildField(DocumentField field) {
+    final bloc = context.read<DocumentGeneratorBloc>();
+    final isNumber = field.type == DocumentFieldType.number;
+    final isMultiline = field.type == DocumentFieldType.multiline;
+    final isPassport = field.key == 'passport';
 
-  final List<DocumentField> fields;
-  final DocumentGeneratorBloc bloc;
+    final value = _values[field.key] ?? '';
+    final isFilled = value.isNotEmpty;
+    final isValid = !isPassport || value.length == 9;
 
-  @override
-  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FieldLabel(field.label),
+        GlobalTextField(
+          hintText: field.hint,
+          onChanged: (val) {
+            setState(() {
+              if (isNumber) {
+                _values[field.key] = val.replaceAll(RegExp(r'[^0-9]'), '');
+              } else {
+                _values[field.key] = val;
+              }
+            });
+            bloc.add(DocumentValueChanged(field.key, val));
+          },
+          suffixIcon: isFilled
+              ? (isValid 
+                  ? const Icon(CupertinoIcons.checkmark_circle_fill, color: AppColors.online, size: 18)
+                  : const Icon(CupertinoIcons.exclamationmark_circle_fill, color: AppColors.danger, size: 18))
+              : null,
+          textInputType: isNumber ? TextInputType.number : TextInputType.text,
+          textInputAction: isMultiline ? TextInputAction.newline : TextInputAction.next,
+          formatter: isNumber
+              ? [FilteringTextInputFormatter.digitsOnly, ThousandsInputFormatter()]
+              : isPassport
+                  ? [PassportInputFormatter()]
+                  : null,
+          maxLine: isMultiline ? 4 : 1,
+          validator: (val) {
+            if (val == null || val.isEmpty) return "Maydonni to'ldiring";
+            if (isPassport && val.length != 9) return "Pasport formati xato (masalan: AA1234567)";
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHalfRow(List<DocumentField> fields) {
     final rows = <Widget>[];
     for (int i = 0; i < fields.length; i += 2) {
       final left = fields[i];
@@ -304,20 +573,10 @@ class _HalfRow extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: _Field(
-                  field: left,
-                  onChanged: (v) => bloc.add(DocumentValueChanged(left.key, v)),
-                ),
-              ),
+              Expanded(child: _buildField(left)),
               if (right != null) ...[
                 const SizedBox(width: 11),
-                Expanded(
-                  child: _Field(
-                    field: right,
-                    onChanged: (v) => bloc.add(DocumentValueChanged(right.key, v)),
-                  ),
-                ),
+                Expanded(child: _buildField(right)),
               ] else
                 const Expanded(child: SizedBox()),
             ],
@@ -329,132 +588,7 @@ class _HalfRow extends StatelessWidget {
   }
 }
 
-class _Field extends StatelessWidget {
-  const _Field({required this.field, required this.onChanged});
-
-  final DocumentField field;
-  final ValueChanged<String> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final isNumber = field.type == DocumentFieldType.number;
-    final isMultiline = field.type == DocumentFieldType.multiline;
-    final isPassport = field.key == 'passport';
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        FieldLabel(field.label),
-        GlobalTextField(
-          hintText: field.hint,
-          onChanged: (val) {
-            if (isNumber) {
-              final digits = val.replaceAll(RegExp(r'[^0-9]'), '');
-              onChanged(digits);
-            } else {
-              onChanged(val);
-            }
-          },
-          textInputType: isNumber ? TextInputType.number : TextInputType.text,
-          textInputAction:
-              isMultiline ? TextInputAction.newline : TextInputAction.next,
-          formatter: isNumber
-              ? [FilteringTextInputFormatter.digitsOnly, ThousandsInputFormatter()]
-              : isPassport
-                  ? [PassportInputFormatter()]
-                  : null,
-          maxLine: isMultiline ? 4 : 1,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "Maydonni to'ldiring".tr();
-            }
-            if (isPassport && value.length != 9) {
-              return "Pasport 2 ta harf va 7 ta sondan iborat bo'lishi kerak";
-            }
-            return null;
-          },
-        ),
-      ],
-    );
-  }
-}
-
-class _PreviewCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return AppCard(
-      padding: const EdgeInsets.all(14),
-      child: Row(
-        children: [
-          Container(
-            width: 56,
-            height: 72,
-            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 8),
-            decoration: BoxDecoration(
-              color: AppColors.paperBg,
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(color: AppColors.border),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  height: 4,
-                  width: 30,
-                  margin: const EdgeInsets.only(bottom: 6),
-                  decoration: BoxDecoration(
-                    color: AppColors.gold,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                ..._lines(3, 0.18),
-                const SizedBox(height: 3),
-                ..._lines(3, 0.1),
-              ],
-            ),
-          ),
-          const SizedBox(width: 13),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GlobalText(
-                  text: 'Jonli ko\'rib chiqish',
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-                const SizedBox(height: 3),
-                GlobalText(
-                  text: 'Yuridik jihatdan to\'g\'ri shablon asosida',
-                  fontSize: 11.5,
-                  color: AppColors.textMuted,
-                  height: 1.45,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  List<Widget> _lines(int count, double opacity) {
-    return List.generate(
-      count,
-      (i) => Container(
-        height: 2.5,
-        margin: const EdgeInsets.only(bottom: 3),
-        decoration: BoxDecoration(
-          color: AppColors.navy.withValues(alpha: opacity),
-          borderRadius: BorderRadius.circular(2),
-        ),
-      ),
-    );
-  }
-}
-
-// ── STEP 3: Tayyor ───────────────────────────────────────────────
+// ── STEP 3: Hujjat Tayyor (Natija Sahifasi) ──────────────────────
 class _DoneStep extends StatelessWidget {
   const _DoneStep({required this.template});
 
@@ -531,7 +665,7 @@ class _DoneStep extends StatelessWidget {
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
                     const SizedBox(height: 2),
-                    GlobalText(
+                    const GlobalText(
                       text: '48 KB · PDF hujjat',
                       fontSize: 11.5,
                       color: AppColors.textMuted,
@@ -548,8 +682,41 @@ class _DoneStep extends StatelessWidget {
   }
 }
 
-class _BottomBar extends StatelessWidget {
+// ── BOTTOM BAR (PDF Yaratish & Yuklash & Ulashish) ───────────────
+class _BottomBar extends StatefulWidget {
   const _BottomBar();
+
+  @override
+  State<_BottomBar> createState() => _BottomBarState();
+}
+
+class _BottomBarState extends State<_BottomBar> {
+  bool _isGeneratingLocal = false;
+
+  void _triggerGeneration(BuildContext context) {
+    setState(() {
+      _isGeneratingLocal = true;
+    });
+    // Wait 2 seconds and fire bloc event
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() {
+          _isGeneratingLocal = false;
+        });
+        context.read<DocumentGeneratorBloc>().add(const DocumentGenerateRequested());
+      }
+    });
+  }
+
+  void _shareDocument(BuildContext context) {
+    toastification.show(
+      context: context,
+      type: ToastificationType.info,
+      style: ToastificationStyle.fillColored,
+      title: const Text('Ulashish oynasi ochildi (Share sheet)'),
+      autoCloseDuration: const Duration(seconds: 3),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -567,14 +734,14 @@ class _BottomBar extends StatelessWidget {
           bottom: 0,
           child: Padding(
             padding: const EdgeInsets.only(left: 16, right: 16, bottom: 30),
-            child: _buildButton(context, state),
+            child: _buildButtonContent(context, state),
           ),
         );
       },
     );
   }
 
-  Widget _buildButton(BuildContext context, DocumentGeneratorState state) {
+  Widget _buildButtonContent(BuildContext context, DocumentGeneratorState state) {
     final bloc = context.read<DocumentGeneratorBloc>();
 
     if (state.step == DocumentStep.done) {
@@ -589,7 +756,18 @@ class _BottomBar extends StatelessWidget {
               borderColor: AppColors.borderStrong,
             ),
           ),
-          const SizedBox(width: 11),
+          const SizedBox(width: 8),
+          Expanded(
+            child: GlobalButton(
+              title: 'Ulashish',
+              onTap: () => _shareDocument(context),
+              color: Theme.of(context).cardColor,
+              textColor: Theme.of(context).colorScheme.onSurface,
+              borderColor: AppColors.borderStrong,
+              leftIcon: const Icon(CupertinoIcons.share, size: 18),
+            ),
+          ),
+          const SizedBox(width: 8),
           Expanded(
             flex: 2,
             child: GlobalButton(
@@ -599,7 +777,15 @@ class _BottomBar extends StatelessWidget {
                 size: 18,
                 color: AppColors.gold,
               ),
-              onTap: () {},
+              onTap: () {
+                toastification.show(
+                  context: context,
+                  type: ToastificationType.success,
+                  style: ToastificationStyle.fillColored,
+                  title: const Text('PDF yuklab olindi'),
+                  autoCloseDuration: const Duration(seconds: 3),
+                );
+              },
               color: AppColors.navy,
               textColor: AppColors.white,
             ),
@@ -608,7 +794,7 @@ class _BottomBar extends StatelessWidget {
       );
     }
 
-    if (state.isGenerating) {
+    if (_isGeneratingLocal) {
       return Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(vertical: 20),
@@ -616,9 +802,13 @@ class _BottomBar extends StatelessWidget {
           color: AppColors.navy,
           borderRadius: BorderRadius.circular(100),
         ),
-        child: const AdolatLoader(
-          size: 22,
-          color: AppColors.gold,
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AdolatLoader(size: 20, color: AppColors.gold),
+            SizedBox(width: 10),
+            GlobalText(text: 'PDF tayyorlanmoqda...', fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white),
+          ],
         ),
       );
     }
@@ -631,7 +821,7 @@ class _BottomBar extends StatelessWidget {
         color: AppColors.gold,
       ),
       onTap: state.canGenerate
-          ? () => bloc.add(const DocumentGenerateRequested())
+          ? () => _triggerGeneration(context)
           : null,
       color: AppColors.navy,
       textColor: AppColors.white,

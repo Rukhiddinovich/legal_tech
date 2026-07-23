@@ -19,6 +19,14 @@ import '../../core/constants/app_colors.dart';
 import '../../core/widgets/global_text.dart';
 import 'app_route_names.dart';
 
+// New Features Imports
+import '../../features/legal_instructions/domain/entities/article.dart';
+import '../../features/legal_instructions/presentation/pages/articles_list_page.dart';
+import '../../features/legal_instructions/presentation/pages/article_detail_page.dart';
+import '../../features/lawyers/presentation/pages/rating_page.dart';
+import '../../features/consultation/presentation/pages/call_page.dart';
+import '../../features/notifications/presentation/pages/notifications_page.dart';
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class AppRouter {
@@ -94,6 +102,44 @@ class AppRouter {
         path: AppRouteNames.savedLawyers,
         name: AppRouteNames.savedLawyers,
         builder: (context, state) => const SavedLawyersPage(),
+      ),
+      GoRoute(
+        path: AppRouteNames.legalInstructions,
+        name: AppRouteNames.legalInstructions,
+        builder: (context, state) => const ArticlesListPage(),
+      ),
+      GoRoute(
+        path: AppRouteNames.articleDetail,
+        name: AppRouteNames.articleDetail,
+        builder: (context, state) {
+          final article = state.extra;
+          if (article is! Article) return _buildUnknownRoutePage('Invalid Article argument');
+          return ArticleDetailPage(article: article);
+        },
+      ),
+      GoRoute(
+        path: AppRouteNames.ratingPage,
+        name: AppRouteNames.ratingPage,
+        builder: (context, state) {
+          final lawyer = state.extra;
+          if (lawyer is! Lawyer) return _buildUnknownRoutePage('Invalid Lawyer argument');
+          return RatingPage(lawyer: lawyer);
+        },
+      ),
+      GoRoute(
+        path: AppRouteNames.callPage,
+        name: AppRouteNames.callPage,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          final lawyer = extra['lawyer'] as Lawyer;
+          final isVideo = extra['isVideo'] as bool;
+          return CallPage(lawyer: lawyer, isVideo: isVideo);
+        },
+      ),
+      GoRoute(
+        path: AppRouteNames.notifications,
+        name: AppRouteNames.notifications,
+        builder: (context, state) => const NotificationsPage(),
       ),
     ],
   );

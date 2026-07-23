@@ -213,7 +213,7 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 20),
             Center(
               child: GlobalText(
-                text: 'LegalTech · v1.0.0',
+                text: 'LegalTech · v2.0.0',
                 fontSize: 12,
                 color: AppColors.textMuted,
               ),
@@ -223,7 +223,8 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-}
+
+  }
 
 class _ProfileHeader extends StatelessWidget {
   const _ProfileHeader({required this.name, required this.phone});

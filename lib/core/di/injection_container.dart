@@ -1,5 +1,10 @@
 import 'package:get_it/get_it.dart';
 
+// Legal Instructions
+import '../../features/legal_instructions/data/datasources/article_mock_data.dart';
+import '../../features/legal_instructions/data/repositories/article_repository_impl.dart';
+import '../../features/legal_instructions/domain/repositories/article_repository.dart';
+import '../../features/legal_instructions/presentation/bloc/article_bloc.dart';
 // Catalog
 import '../../features/catalog/presentation/bloc/catalog_bloc.dart';
 // Calculator
@@ -44,7 +49,6 @@ final GetIt sl = GetIt.instance;
 ///
 /// Tartib: DataSource → Repository → UseCase → Bloc/Cubit.
 /// Bloc/Cubit'lar `registerFactory` bilan (har safar yangi instansiya),
-/// qolgan qatlamlar `registerLazySingleton` bilan ro'yxatdan o'tadi.
 Future<void> initDependencies() async {
   _initTheme();
   _initLawyers();
@@ -54,6 +58,7 @@ Future<void> initDependencies() async {
   _initDocuments();
   _initCalculator();
   _initWallet();
+  _initArticles();
 }
 
 void _initTheme() {
@@ -115,3 +120,12 @@ void _initCalculator() {
 void _initWallet() {
   sl.registerLazySingleton<WalletRepository>(() => WalletRepositoryImpl());
 }
+
+void _initArticles() {
+  sl.registerLazySingleton<ArticleDataSource>(() => ArticleMockDataSource());
+  sl.registerLazySingleton<ArticleRepository>(
+    () => ArticleRepositoryImpl(sl()),
+  );
+  sl.registerFactory<ArticleBloc>(() => ArticleBloc(sl()));
+}
+

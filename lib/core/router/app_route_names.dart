@@ -12,4 +12,9 @@ class AppRouteNames {
   static const String profileEdit = '/profile-edit';
   static const String lawyersByArea = '/lawyers-by-area';
   static const String savedLawyers = '/saved-lawyers';
+  static const String legalInstructions = '/legal-instructions';
+  static const String articleDetail = '/article-detail';
+  static const String ratingPage = '/rating-page';
+  static const String callPage = '/call-page';
+  static const String notifications = '/notifications';
 }

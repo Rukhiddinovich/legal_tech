@@ -194,11 +194,3 @@ shu sohada ishlaydigan advokatlar kartochkalari roʻyxati chiqadi.*
 | "Analitika" ikonkasi                       | Bosiladi        | Umumiy platforma statistikasi: daromad, faol foydalanuvchilar, eng koʻp soʻralgan sohalar grafiklari.                                                                       |
 | "Sozlamalar" ikonkasi                      | Bosiladi        | Sohalar boʻyicha narxlarni, BHM qiymatini, komissiya foizini oʻzgartirish paneli ochiladi.                                                                                  |
 
----
-
-## 💡 Eslatma
-
-Ushbu hujjat PRD v2.0 bilan birga ishlatilishi kerak — u yerda biznes mantiq va qoidalar, bu yerda
-esa har bir ekran va tugmaning aniq xatti-harakati yozilgan. Dizayner (UI/UX) ushbu hujjat asosida
-wireframe va Figma maketlarini tayyorlashi, dasturchi esa har bir elementni aynan shu tavsifga mos
-qilib ishlab chiqishi tavsiya etiladi.

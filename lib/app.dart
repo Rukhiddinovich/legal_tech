@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:toastification/toastification.dart';
 
 import 'core/di/injection_container.dart';
 import 'core/router/app_router.dart';
@@ -21,18 +22,20 @@ class Application extends StatelessWidget {
       ],
       child: BlocBuilder<ThemeBloc, ThemeMode>(
         builder: (context, themeMode) {
-          return MaterialApp.router(
-            title: 'Adolat',
-            debugShowCheckedModeBanner: false,
-            localizationsDelegates: context.localizationDelegates,
-            supportedLocales: context.supportedLocales,
-            locale: context.locale,
-            theme: AppTheme.light(),
-            darkTheme: AppTheme.dark(),
-            themeMode: themeMode,
-            routerConfig: AppRouter.router,
-            scrollBehavior: const MaterialScrollBehavior().copyWith(
-              physics: const BouncingScrollPhysics(),
+          return ToastificationWrapper(
+            child: MaterialApp.router(
+              title: 'Adolat',
+              debugShowCheckedModeBanner: false,
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: context.locale,
+              theme: AppTheme.light(),
+              darkTheme: AppTheme.dark(),
+              themeMode: themeMode,
+              routerConfig: AppRouter.router,
+              scrollBehavior: const MaterialScrollBehavior().copyWith(
+                physics: const BouncingScrollPhysics(),
+              ),
             ),
           );
         },

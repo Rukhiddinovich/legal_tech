@@ -19,6 +19,7 @@ class GlobalText extends StatelessWidget {
     this.isEllipsis = false,
     this.softWrap,
     this.height,
+    this.translate = true,
   });
 
   final String? text;
@@ -35,11 +36,12 @@ class GlobalText extends StatelessWidget {
   final bool isEllipsis;
   final bool? softWrap;
   final double? height;
+  final bool translate;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      tr(text ?? ""),
+      translate ? tr(text ?? "") : (text ?? ""),
       style: _resolveStyle(),
       maxLines: maxLines,
       textAlign: textAlign,

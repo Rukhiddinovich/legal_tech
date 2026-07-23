@@ -5,11 +5,10 @@ import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/global_text.dart';
+import '../../../b2b/presentation/pages/b2b_cabinet_page.dart';
 import '../../../catalog/presentation/pages/catalog_page.dart';
 import '../../../consultation/presentation/pages/consultation_list_page.dart';
-import '../../../documents/presentation/pages/documents_hub_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
-import '../../../wallet/presentation/pages/wallet_page.dart';
 import '../bloc/tab_bloc.dart';
 
 class TabBox extends StatefulWidget {
@@ -22,9 +21,8 @@ class TabBox extends StatefulWidget {
 class _TabBoxState extends State<TabBox> {
   static const _pages = <Widget>[
     CatalogPage(),
-    DocumentsHubPage(),
     ConsultationListPage(),
-    WalletPage(),
+    B2BCabinetPage(),
     ProfilePage(),
   ];
 
@@ -35,11 +33,12 @@ class _TabBoxState extends State<TabBox> {
       child: BlocBuilder<TabBloc, int>(
         builder: (context, state) {
           final isDark = Theme.of(context).brightness == Brightness.dark;
+          final currentIdx = state.clamp(0, 3);
           
           return Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: IndexedStack(
-              index: state.clamp(0, 4),
+              index: currentIdx,
               children: _pages,
             ),
             bottomNavigationBar: DecoratedBox(
@@ -69,7 +68,7 @@ class _TabBoxState extends State<TabBox> {
                           icon: CupertinoIcons.house,
                           activeIcon: CupertinoIcons.house_fill,
                           label: "Bosh",
-                          selectedIndex: state,
+                          selectedIndex: currentIdx,
                           onTap: (index) {
                             context.read<TabBloc>().add(TabSelected(index));
                           },
@@ -80,8 +79,8 @@ class _TabBoxState extends State<TabBox> {
                           index: 1,
                           icon: CupertinoIcons.doc,
                           activeIcon: CupertinoIcons.doc_fill,
-                          label: "Hujjatlar",
-                          selectedIndex: state,
+                          label: "Buyurtmalarim",
+                          selectedIndex: currentIdx,
                           onTap: (index) {
                             context.read<TabBloc>().add(TabSelected(index));
                           },
@@ -90,10 +89,10 @@ class _TabBoxState extends State<TabBox> {
                       Expanded(
                         child: _BottomTabItem(
                           index: 2,
-                          icon: CupertinoIcons.chat_bubble,
-                          activeIcon: CupertinoIcons.chat_bubble_fill,
-                          label: "Chat",
-                          selectedIndex: state,
+                          icon: CupertinoIcons.briefcase,
+                          activeIcon: CupertinoIcons.briefcase_fill,
+                          label: "B2B",
+                          selectedIndex: currentIdx,
                           onTap: (index) {
                             context.read<TabBloc>().add(TabSelected(index));
                           },
@@ -102,22 +101,10 @@ class _TabBoxState extends State<TabBox> {
                       Expanded(
                         child: _BottomTabItem(
                           index: 3,
-                          icon: CupertinoIcons.creditcard,
-                          activeIcon: CupertinoIcons.creditcard_fill,
-                          label: "Hamyon",
-                          selectedIndex: state,
-                          onTap: (index) {
-                            context.read<TabBloc>().add(TabSelected(index));
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        child: _BottomTabItem(
-                          index: 4,
                           icon: CupertinoIcons.person,
                           activeIcon: CupertinoIcons.person_fill,
                           label: "Profil",
-                          selectedIndex: state,
+                          selectedIndex: currentIdx,
                           onTap: (index) {
                             context.read<TabBloc>().add(TabSelected(index));
                           },

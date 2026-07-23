@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,6 +63,7 @@ class CatalogPage extends StatelessWidget {
                           _buildAreasGrid(context, state),
                           const SizedBox(height: 16),
                           _buildToolsRow(context),
+                          _buildInstructionsBanner(context),
                           const SizedBox(height: 22),
                           _buildOnlineHeader(state.onlineCount),
                           const SizedBox(height: 13),
@@ -151,6 +153,84 @@ class CatalogPage extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildInstructionsBanner(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 12),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppColors.navy, Color(0xFF1E2E4A)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.gold.withValues(alpha: 0.25), width: 1.5),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(20),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () => context.push(AppRouteNames.legalInstructions),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppColors.gold.withValues(alpha: 0.18),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: const GlobalText(
+                          text: 'Huquqiy ko\'rsatmalar',
+                          fontSize: 10.5,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.gold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      const GlobalText(
+                        text: 'Qonuniy Huquqlaringizni Biling',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.white,
+                      ),
+                      const SizedBox(height: 4),
+                      GlobalText(
+                        text: 'Meros, oila, soliq va boshqa mavzularda rasmiy ko\'rsatmalar bazasi',
+                        fontSize: 12,
+                        color: AppColors.white.withValues(alpha: 0.6),
+                        height: 1.35,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: AppColors.gold.withValues(alpha: 0.22),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    CupertinoIcons.chevron_right,
+                    color: AppColors.gold,
+                    size: 20,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -311,21 +391,62 @@ class _HeaderDelegate extends SliverPersistentHeaderDelegate {
                             ],
                           ),
                         ),
-                        Material(
-                          color: Colors.white.withValues(alpha: 0.1),
-                          shape: const CircleBorder(),
-                          child: InkWell(
-                            onTap: () => context.push(AppRouteNames.savedLawyers),
-                            customBorder: const CircleBorder(),
-                            child: const Padding(
-                              padding: EdgeInsets.all(12.0),
-                              child: Icon(
-                                CupertinoIcons.bookmark,
-                                color: AppColors.white,
-                                size: 22,
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Bookmark
+                            Material(
+                              color: Colors.white.withValues(alpha: 0.1),
+                              shape: const CircleBorder(),
+                              child: InkWell(
+                                onTap: () => context.push(AppRouteNames.savedLawyers),
+                                customBorder: const CircleBorder(),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Icon(
+                                    CupertinoIcons.bookmark,
+                                    color: AppColors.white,
+                                    size: 18,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                            const SizedBox(width: 8),
+                            // Notifications Bell with dot
+                            Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Material(
+                                  color: Colors.white.withValues(alpha: 0.1),
+                                  shape: const CircleBorder(),
+                                  child: InkWell(
+                                    onTap: () => context.push(AppRouteNames.notifications),
+                                    customBorder: const CircleBorder(),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(10.0),
+                                      child: Icon(
+                                        CupertinoIcons.bell,
+                                        color: AppColors.white,
+                                        size: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 2,
+                                  right: 2,
+                                  child: Container(
+                                    width: 7,
+                                    height: 7,
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.danger,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ],
                     ),

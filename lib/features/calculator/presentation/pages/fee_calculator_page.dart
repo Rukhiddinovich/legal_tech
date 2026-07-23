@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:toastification/toastification.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../../../core/constants/app_colors.dart';
@@ -130,8 +131,16 @@ class _CalculatorViewState extends State<_CalculatorView> {
                   children: [
                     Expanded(
                       child: GlobalButton(
-                        title: 'Batafsil',
-                        onTap: () {},
+                        title: 'Ulashish',
+                        onTap: () {
+                          toastification.show(
+                            context: context,
+                            type: ToastificationType.success,
+                            style: ToastificationStyle.fillColored,
+                            title: const Text('Boj hisobi natijalari nusxalandi va ulashishga tayyor.'),
+                            autoCloseDuration: const Duration(seconds: 3),
+                          );
+                        },
                         color: Theme.of(context).cardColor,
                         textColor: Theme.of(context).colorScheme.onSurface,
                         borderColor: AppColors.borderStrong,
@@ -139,13 +148,22 @@ class _CalculatorViewState extends State<_CalculatorView> {
                         fontFamily: 'Manrope',
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
+                        leftIcon: const Icon(CupertinoIcons.share, size: 16),
                       ),
                     ),
                     const SizedBox(width: 11),
                     Expanded(
                       child: GlobalButton(
                         title: 'Hujjatga qo\'shish',
-                        onTap: () {},
+                        onTap: () {
+                          toastification.show(
+                            context: context,
+                            type: ToastificationType.success,
+                            style: ToastificationStyle.fillColored,
+                            title: const Text('Hisob-kitob hujjatingizga muvaffaqiyatli qo\'shildi.'),
+                            autoCloseDuration: const Duration(seconds: 3),
+                          );
+                        },
                         color: AppColors.navy,
                         textColor: AppColors.white,
                         radius: 16,

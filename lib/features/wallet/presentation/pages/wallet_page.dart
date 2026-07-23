@@ -13,7 +13,6 @@ import '../../../../core/widgets/global_text.dart';
 import '../../domain/entities/wallet.dart';
 import '../../domain/repositories/wallet_repository.dart';
 
-/// "Hamyon" tabi — virtual balans va tranzaksiyalar (PRD split-payment).
 class WalletPage extends StatefulWidget {
   const WalletPage({super.key});
 
